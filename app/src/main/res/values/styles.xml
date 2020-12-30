@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ThemeSplash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@drawable/splash_drawable</item>
+    </style>
+
+    <style name="ThemeDay" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorPrimary">@color/teal_200</item>
+        <item name="colorPrimaryDark">@color/teal_200</item>
+        <item name="colorAccent">@color/teal_200</item>
+        <!--        <item name="materialAlertDialogTheme">@style/AlertDialogWithFonts</item>-->
+        <!--        <item name="swipeRefreshLayoutProgressSpinnerBackgroundColor">@color/colorCardBackground-->
+        <!--        </item>-->
+    </style>
+
+    <style name="ThemeNight" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--        <item name="materialAlertDialogTheme">@style/AlertDialogWithFonts</item>-->
+        <!--        <item name="swipeRefreshLayoutProgressSpinnerBackgroundColor">@color/colorCardBackground-->
+        <!--        </item>-->
+    </style>
+
+    <!--    shapes-->
+    <style name="ShapeCircle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>
