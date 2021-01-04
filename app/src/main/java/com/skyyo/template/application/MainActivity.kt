@@ -51,22 +51,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        initNavigation()
+        if (savedInstanceState == null) initNavigation(restoring = false)
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
 
-    override fun onSupportNavigateUp() = navController.navigateUp()
-
-    private fun initNavigation() {
-        (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also {
-            navController = it.navController
-        }
-        provideStartDestination()?.let { id -> navController.navigate(id) }
-        navController.addOnDestinationChangedListener(destinationChangedListener)
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        initNavigation(restoring = true)
     }
 
-    private fun provideStartDestination(): Int? {
+    override fun onSupportNavigateUp() = navController.navigateUp()
+
+    private fun initNavigation(restoring: Boolean) {
+        (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also {
+            navController = it.navController
+            if (!restoring) startDestination()?.let { id -> navController.navigate(id) }
+            navController.addOnDestinationChangedListener(destinationChangedListener)
+        }
+    }
+
+    private fun startDestination(): Int? {
         val accessToken = runBlocking { dataStoreManager.getAccessToken() }
         return if (accessToken == null) R.id.goSignIn else null
     }
