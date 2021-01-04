@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "com.skyyo.template.datastore";
+option java_multiple_files = true;
+
+message PaymentMethods {
+  repeated PaymentMethodProto PaymentMethod = 1;
+}
+
+message PaymentMethodProto {
+  int32 id = 1;
+  string type = 2;
+  bool isDefault = 3;
+}

@@ -1,6 +1,7 @@
 package com.skyyo.template.application.models.local
 
-class ExampleLocalModel(
+class PaymentMethod(
     val id: Int,
-    val type: String
+    var type: String,
+    var isDefault: Boolean
 )
