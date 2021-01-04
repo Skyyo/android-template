@@ -56,9 +56,11 @@ object NetworkModule {
         authenticator: RetrofitAuthenticator
     ): OkHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(headerInjector)
-        addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        })
+        addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+        )
         authenticator(authenticator)
         dispatcher(Dispatcher())
         connectTimeout(timeout = 10, TimeUnit.SECONDS)
