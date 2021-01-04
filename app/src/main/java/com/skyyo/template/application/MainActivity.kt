@@ -3,15 +3,16 @@ package com.skyyo.template.application
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.view.WindowCompat
+import androidx.core.view.*
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.databinding.ActivityMainBinding
 import com.skyyo.template.extensions.changeSystemBars
+import com.skyyo.template.extensions.setupWithNavController
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,12 +27,18 @@ typealias onDestinationChanged = NavController.OnDestinationChangedListener
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
+    private var currentNavController: LiveData<NavController>? = null
     private val destinationChangedListener = onDestinationChanged { _, destination, _ ->
         when (destination.id) {
             R.id.fragmentSignIn,
-            R.id.fragmentSignUp -> binding.fragmentHost.changeSystemBars(light = false)
-            else -> binding.fragmentHost.changeSystemBars(light = true)
+            R.id.fragmentSignUp -> {
+                binding.fragmentHost.changeSystemBars(light = false)
+                updateBottomNavigationView(visible = false)
+            }
+            else -> {
+                binding.fragmentHost.changeSystemBars(light = true)
+                updateBottomNavigationView(visible = true)
+            }
         }
     }
 
@@ -51,24 +58,46 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        initNavigation()
+        if (savedInstanceState == null) initNavigation(restoringState = false)
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
 
-    override fun onSupportNavigateUp() = navController.navigateUp()
-
-    private fun initNavigation() {
-        (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also {
-            navController = it.navController
-        }
-        provideStartDestination()?.let { id -> navController.navigate(id) }
-        navController.addOnDestinationChangedListener(destinationChangedListener)
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        initNavigation(restoringState = true)
     }
 
-    private fun provideStartDestination(): Int? {
+    private fun initNavigation(restoringState: Boolean) {
+        binding.bnv.setupWithNavController(
+            navGraphIds = listOf(
+                R.navigation.home_graph,
+                R.navigation.second_tab_graph,
+                R.navigation.third_tab_graph,
+            ),
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.fragmentHost,
+            intent = intent
+        ).also { controller ->
+            if (!restoringState) startDestination()?.let { id -> controller.value?.navigate(id) }
+            controller.observe(this) { navController ->
+                with(navController) {
+                    removeOnDestinationChangedListener(destinationChangedListener)
+                    addOnDestinationChangedListener(destinationChangedListener)
+                }
+            }
+            currentNavController = controller
+        }
+    }
+
+    private fun startDestination(): Int? {
         val accessToken = runBlocking { dataStoreManager.getAccessToken() }
         return if (accessToken == null) R.id.goSignIn else null
+    }
+
+    private fun updateBottomNavigationView(visible: Boolean) {
+        // animate as slide or smth
+        binding.bnv.isVisible = visible
     }
 
     private fun lockIntoPortrait() {

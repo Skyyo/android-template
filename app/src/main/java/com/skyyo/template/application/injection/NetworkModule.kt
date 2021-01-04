@@ -51,26 +51,18 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
-
-    @Singleton
-    @Provides
-    fun provideRetrofitDispatcher(): Dispatcher = Dispatcher()
-
-    @Singleton
-    @Provides
     fun provideOkHttpClient(
-        dispatcher: Dispatcher,
-        loggingInterceptor: HttpLoggingInterceptor,
         headerInjector: Interceptor,
         authenticator: RetrofitAuthenticator
     ): OkHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(headerInjector)
-        addInterceptor(loggingInterceptor)
+        addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+        )
         authenticator(authenticator)
-        dispatcher(dispatcher)
+        dispatcher(Dispatcher())
         connectTimeout(timeout = 10, TimeUnit.SECONDS)
         writeTimeout(timeout = 10, TimeUnit.SECONDS)
         readTimeout(timeout = 10, TimeUnit.SECONDS)
