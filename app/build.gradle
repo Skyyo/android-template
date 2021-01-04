@@ -82,11 +82,16 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
     implementation 'com.google.android.material:material:1.2.1'
     implementation "com.xwray:groupie:$groupie_version"
     implementation "com.github.lisawray.groupie:groupie-viewbinding:$groupie_version"
     implementation "dev.chrisbanes:insetter-ktx:0.3.1"
     implementation("io.coil-kt:coil:1.0.0")
+
 
     debugImplementation "com.github.YarikSOffice.Venom:venom:0.3.1"
     releaseImplementation "com.github.YarikSOffice.Venom:venom-no-op:0.3.1"
