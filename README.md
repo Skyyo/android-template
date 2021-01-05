@@ -8,3 +8,6 @@ Template repo with various common components, to reduce "project setup" time
 5. [Bottom navigation view & Room ](https://github.com/Skyyo/android-template/tree/bottom_navigation_view_room)
 6. [Bottom navigation view & Proto Store ](https://github.com/Skyyo/android-template/tree/bottom_navigation_view_proto)
 
+After setup:
+1. Change package name everywhere ( including proto files )
+2. Update / remove readme.md
