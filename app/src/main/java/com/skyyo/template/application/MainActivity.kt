@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
+import com.skyyo.template.application.persistance.room.AppDatabase
 import com.skyyo.template.databinding.ActivityMainBinding
 import com.skyyo.template.extensions.changeSystemBars
 import com.skyyo.template.extensions.setupWithNavController
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStoreManager: DataStoreManager
 
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lockIntoPortrait()
@@ -58,17 +62,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        if (savedInstanceState == null) initNavigation(restoringState = false)
+        if (savedInstanceState == null) initNavigation(restoring = false)
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        initNavigation(restoringState = true)
+        initNavigation(restoring = true)
     }
 
-    private fun initNavigation(restoringState: Boolean) {
+    private fun initNavigation(restoring: Boolean) {
         binding.bnv.setupWithNavController(
             navGraphIds = listOf(
                 R.navigation.home_graph,
@@ -79,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             containerId = R.id.fragmentHost,
             intent = intent
         ).also { controller ->
-            if (!restoringState) startDestination()?.let { id -> controller.value?.navigate(id) }
+            if (!restoring) startDestination()?.let { id -> controller.value?.navigate(id) }
             controller.observe(this) { navController ->
                 with(navController) {
                     removeOnDestinationChangedListener(destinationChangedListener)
@@ -113,6 +117,7 @@ class MainActivity : AppCompatActivity() {
             if (isFinishing) return
             @Suppress("GlobalCoroutineUsage")
             GlobalScope.launch(Dispatchers.IO) {
+                appDatabase.clearAllTables()
                 dataStoreManager.clearData()
             }
             finish()
