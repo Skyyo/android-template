@@ -58,17 +58,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        if (savedInstanceState == null) initNavigation(restoringState = false)
+        if (savedInstanceState == null) initNavigation(restore = false)
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        initNavigation(restoringState = true)
+        initNavigation(restore = true)
     }
 
-    private fun initNavigation(restoringState: Boolean) {
+    private fun initNavigation(restore: Boolean) {
         binding.bnv.setupWithNavController(
             navGraphIds = listOf(
                 R.navigation.home_graph,
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             containerId = R.id.fragmentHost,
             intent = intent
         ).also { controller ->
-            if (!restoringState) startDestination()?.let { id -> controller.value?.navigate(id) }
+            if (!restore) startDestination()?.let { id -> controller.value?.navigate(id) }
             controller.observe(this) { navController ->
                 with(navController) {
                     removeOnDestinationChangedListener(destinationChangedListener)
