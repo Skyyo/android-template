@@ -64,6 +64,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.5.0-alpha05'
     // navigation-fragment-ktx:2.3.2 has changes that make HomeFragment
     // initialized before any other destination, wait until update to see if changes are needed
+    // can be caused by https://android.googlesource.com/platform/frameworks/support/+/9daa669cc1f310f6f128bab1e977d177f87ca58c
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-runtime:2.3.0-alpha-5"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha-5"
