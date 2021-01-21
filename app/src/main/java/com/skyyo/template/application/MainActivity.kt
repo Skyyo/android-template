@@ -64,16 +64,22 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp() = navController.navigateUp()
 
     private fun initNavigation(restoring: Boolean) {
-        (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also {
-            navController = it.navController
-            if (!restoring) startDestination()?.let { id -> navController.navigate(id) }
+        (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
+            if (!restoring) {
+                val navInflater = navHost.navController.navInflater
+                val navGraph = navInflater.inflate(R.navigation.main_graph).apply {
+                    startDestination = provideStartDestination()
+                }
+                navHost.navController.graph = navGraph
+            }
+            navController = navHost.navController
             navController.addOnDestinationChangedListener(destinationChangedListener)
         }
     }
 
-    private fun startDestination(): Int? {
+    private fun provideStartDestination(): Int {
         val accessToken = runBlocking { dataStoreManager.getAccessToken() }
-        return if (accessToken == null) R.id.goSignIn else null
+        return if (accessToken == null) R.id.fragmentSignIn else R.id.fragmentHome
     }
 
     private fun lockIntoPortrait() {
