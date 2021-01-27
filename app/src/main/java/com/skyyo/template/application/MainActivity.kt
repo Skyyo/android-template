@@ -51,27 +51,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        if (savedInstanceState == null) initNavigation(restoring = false)
+        initNavigation()
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        initNavigation(restoring = true)
-    }
-
     override fun onSupportNavigateUp() = navController.navigateUp()
 
-    private fun initNavigation(restoring: Boolean) {
+    private fun initNavigation() {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
-            if (!restoring) {
-                val navInflater = navHost.navController.navInflater
-                val navGraph = navInflater.inflate(R.navigation.main_graph).apply {
-                    startDestination = provideStartDestination()
-                }
-                navHost.navController.graph = navGraph
+            val navInflater = navHost.navController.navInflater
+            val navGraph = navInflater.inflate(R.navigation.main_graph).apply {
+                startDestination = provideStartDestination()
             }
+            navHost.navController.graph = navGraph
             navController = navHost.navController
             navController.addOnDestinationChangedListener(destinationChangedListener)
         }
