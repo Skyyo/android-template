@@ -3,7 +3,7 @@ package com.skyyo.template.features.auth.signIn
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.skyyo.template.R
 import com.skyyo.template.databinding.FragmentSignInBinding
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
     private val binding by viewBinding(FragmentSignInBinding::bind)
-    private val viewModel by activityViewModels<SignInViewModel>()
+    private val viewModel by viewModels<SignInViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
