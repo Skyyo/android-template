@@ -69,7 +69,7 @@ use
 ```kotlin
 typealias OnClick = (position: Int) -> Unit
 class ShopProductItem(
-    private val onClick: OnClick()
+    private val onClick: OnClick
 )
 ```
 ```typealias``` should be declared in an appropriate scope. If used in a single place - it can be placed on top of the same class. If it's a common lambda, which can be reused across different feature packages - please create ```CommonTypeAliases``` file under common package.
@@ -82,6 +82,21 @@ suspend fun checkIfEmailExists(email: String): EmailExistsResult {
         return if (result.isUserRegisteredByEmail) EmailExists else EmailNotFound
     }
 ```
+
+* Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate). We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```.
+```kotlin
+val state = handle.getLiveData("viewState", 0)
+state.postValue(1) // doing so will automatically give us value of 1 upon PD
+
+var scanCompleted = handle.get<Boolean>("scanCompleted") ?: false
+        set(value) {
+            field = value
+            handle.set("scanCompleted", value) // set the key/value pair to the bundle upon each value reassignment
+        }
+scanCompleted = true // will be "false" after PD, unless we set the key/value pair to the bundle like above
+
+```
+
 
 # Before release
 * Check the app for [overdrawing](https://developer.android.com/topic/performance/rendering/overdraw) regions, and optimize wherever possible.
