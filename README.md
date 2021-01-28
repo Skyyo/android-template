@@ -96,7 +96,7 @@ var scanCompleted = handle.get<Boolean>("scanCompleted") ?: false
 scanCompleted = true // will be "false" after PD, unless we set the key/value pair to the bundle like above
 
 ```
-
+* Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 
 # Before release
 * Check the app for [overdrawing](https://developer.android.com/topic/performance/rendering/overdraw) regions, and optimize wherever possible.
@@ -104,3 +104,6 @@ scanCompleted = true // will be "false" after PD, unless we set the key/value pa
 * Run IDE's ```remove unused resources```. Be carefull to check the changes before commiting, so you don't accidentaly remove classes, which are just temporarily unused.
 * Run IDE's ```convert png's to webp's```.
 * Check the [r8](https://developer.android.com/studio/build/shrink-code#enable) rules to prevent release .apk/.aab issues as much as possible.
+
+# Additonal advices
+* Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
