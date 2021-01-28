@@ -24,7 +24,7 @@ if (condition == true) doSmth()
 ..
 ```
 
-use:
+use
 ```kotlin
 private fun validateSmth() {
         if (condition == true) {
@@ -34,7 +34,7 @@ private fun validateSmth() {
         }
     }
 ```    
-instead of:
+instead of
 ```kotlin
 private fun validateSmth() {
         if (condition == true) state.postValue(stateX)
@@ -43,11 +43,11 @@ private fun validateSmth() {
 ``` 
 * Explicitly specify function return types if function output type isn't obvious from function name, or functions code block at first glance.
 
-use:
+use
 ```kotlin
 private fun provideSomeValue(): Int = (12f * 23).toInt() + 123
 ```
-instead of:
+instead of
 ```kotlin
 private fun provideSomeValue() = (12f * 23).toInt() + 123
 ```
@@ -59,7 +59,7 @@ data class SignUpRequest(
 )
 ```
 * Use [typealiases](https://kotlinlang.org/docs/reference/type-aliases.html#type-aliases) if type name is too long or we have a lot of recurring lambda types.
-instead of:
+instead of
 ```kotlin
 class ShopProductItem(
     private val onClick: (position: Int) -> Unit
@@ -95,6 +95,18 @@ var scanCompleted = handle.get<Boolean>("scanCompleted") ?: false
         }
 scanCompleted = true // will be "false" after PD, unless we set the key/value pair to the bundle like above
 
+```
+
+* Declare custom classes instead of [Pairs](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/#pair), [Tripples](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-triple/).
+
+instead of
+```kotlin
+val timeRange: Pair<Int, Int>? = null
+```
+use
+```kotlin
+class TimeRange(val from: Int, val to: Int)
+val timeRange: TimeRange? = null
 ```
 * Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 
