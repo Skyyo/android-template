@@ -1,12 +1,14 @@
 package com.skyyo.template.features.home
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.skyyo.template.R
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val navigationDispatcher: NavigationDispatcher,
 ) : ViewModel() {
 
