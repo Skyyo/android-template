@@ -1,16 +1,17 @@
 package com.skyyo.template.features.auth.signUp
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.skyyo.template.R
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import javax.inject.Inject
 
-class SignUpViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
     private val navigationDispatcher: NavigationDispatcher,
-    @Assisted private val handle: SavedStateHandle
+    private val handle: SavedStateHandle
 ) : ViewModel() {
 
     val events = Channel<SignUpEvent>(Channel.UNLIMITED)
