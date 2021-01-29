@@ -1,7 +1,5 @@
 package com.skyyo.template.features.auth.signIn
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,13 +11,16 @@ import com.skyyo.template.application.repositories.auth.SocialSignInSuccess
 import com.skyyo.template.application.repositories.auth.SocialSignInSuccessFirstTime
 import com.skyyo.template.extensions.isEmail
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignInViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SignInViewModel @Inject constructor(
     private val navigationDispatcher: NavigationDispatcher,
-    @Assisted private val handle: SavedStateHandle,
+    private val handle: SavedStateHandle,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
