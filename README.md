@@ -114,8 +114,8 @@ For API < 26 versions - just [enable desugaring](https://developer.android.com/s
 * Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 
 # Continuous integration & pull requests
-* Template already has a few GitHub Actions workflows included. Please ensure you've passed the checks locally, before opening pull request. To do that, either run commands in the terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
-* If pull request contains code that should close the issue, please write ```close #1, #2, #3```(number == issue number) somewhere in the PR description.
+* Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
+* If pull request contains code that should close the issue, please write: ```close #1, #2, #3```(number == issue number) somewhere in the PR description. This allows for automatic issue closing upon successfull PR merge.
 
 # Before release
 * Check the app for [overdrawing](https://developer.android.com/topic/performance/rendering/overdraw) regions, and optimize wherever possible.
