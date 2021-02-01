@@ -23,8 +23,14 @@ private fun provideCardColor(): Int = if (x > y) Color.CYAN else Color.BLUE
 if (condition == true) doSmth()
 ..
 ```
-
-use
+instead of:
+```kotlin
+private fun validateSmth() {
+        if (condition == true) state.postValue(stateX)
+        else events.offer(PasswordNotValid)
+    }
+``` 
+use:
 ```kotlin
 private fun validateSmth() {
         if (condition == true) {
@@ -34,23 +40,17 @@ private fun validateSmth() {
         }
     }
 ```    
-instead of
-```kotlin
-private fun validateSmth() {
-        if (condition == true) state.postValue(stateX)
-        else events.offer(PasswordNotValid)
-    }
-``` 
-* Explicitly specify function return types if function output type isn't obvious from function name, or functions code block at first glance.
 
-use
-```kotlin
-private fun provideSomeValue(): Int = (12f * 23).toInt() + 123
-```
-instead of
+* Explicitly specify function return types if function output type isn't obvious from function name, or functions code block at first glance.
+instead of:
 ```kotlin
 private fun provideSomeValue() = (12f * 23).toInt() + 123
 ```
+use:
+```kotlin
+private fun provideSomeValue(): Int = (12f * 23).toInt() + 123
+```
+
 * It's ok to use [trailing commas](https://kotlinlang.org/docs/reference/coding-conventions.html#trailing-commas). They are there to make our life easier.
 ```kotlin
 data class SignUpRequest(
@@ -58,7 +58,10 @@ data class SignUpRequest(
     val firstName: String,
 )
 ```
+
 * Use [typealiases](https://kotlinlang.org/docs/reference/type-aliases.html#type-aliases) if type name is too long or we have a lot of recurring lambda types.
+```typealias``` should be declared in an appropriate scope. If used in a single place - it can be placed on top of the same class. If it's a common lambda, which can be reused across different feature packages - please create ```CommonTypeAliases``` file under common package.
+
 instead of
 ```kotlin
 class ShopProductItem(
@@ -72,7 +75,6 @@ class ShopProductItem(
     private val onClick: OnClick
 )
 ```
-```typealias``` should be declared in an appropriate scope. If used in a single place - it can be placed on top of the same class. If it's a common lambda, which can be reused across different feature packages - please create ```CommonTypeAliases``` file under common package.
 
 * We are extensively using ```tryOrNull```extension when we don't need to check the exception reasons from ```try/catch``` blocks, which allows us to write concise statements like in example below, by using kotlins nullability with [elvis operator](https://kotlinlang.org/docs/reference/null-safety.html#elvis-operator)
 ```kotlin
@@ -98,19 +100,18 @@ scanCompleted = true // will be "false" after PD, unless we set the key/value pa
 ```
 
 * Declare custom classes instead of [Pairs](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/#pair), [Tripples](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-triple/).
-
-instead of
+instead of:
 ```kotlin
 val timeRange: Pair<Int, Int>? = null
 ```
-use
+use:
 ```kotlin
 class TimeRange(val from: Int, val to: Int)
 val timeRange: TimeRange? = null
 ```
+
 * Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro).
-
 * Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 
 # Continuous integration & pull requests
