@@ -42,6 +42,7 @@ private fun validateSmth() {
 ```    
 
 * Explicitly specify function return types if function output type isn't obvious from function name, or functions code block at first glance.
+
 instead of:
 ```kotlin
 private fun provideSomeValue() = (12f * 23).toInt() + 123
@@ -62,7 +63,7 @@ data class SignUpRequest(
 * Use [typealiases](https://kotlinlang.org/docs/reference/type-aliases.html#type-aliases) if type name is too long or we have a lot of recurring lambda types.
 ```typealias``` should be declared in an appropriate scope. If used in a single place - it can be placed on top of the same class. If it's a common lambda, which can be reused across different feature packages - please create ```CommonTypeAliases``` file under common package.
 
-instead of
+instead of:
 ```kotlin
 class ShopProductItem(
     private val onClick: (position: Int) -> Unit
@@ -100,6 +101,7 @@ scanCompleted = true // will be "false" after PD, unless we set the key/value pa
 ```
 
 * Declare custom classes instead of [Pairs](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/#pair), [Tripples](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-triple/).
+
 instead of:
 ```kotlin
 val timeRange: Pair<Int, Int>? = null
