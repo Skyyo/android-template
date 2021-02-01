@@ -10,10 +10,10 @@ Template repo with various common components, to reduce "project setup" time
 
 After setup:
 1. Change package name everywhere ( including proto files )
-2. Update / remove readme.md
+2. Update readme.md
 
 
-# During developement (Code style recomendations)
+# During developement (Code style/approaches recomendations)
 
 * Always attempt to have a single line ```if/else``` statement. In that case braces aren't needed. If the ```if/else``` expression exceeds single line - please use braces. If only an ```if``` is used and expression is a single line - braces aren't needed. 
 ```kotlin
@@ -83,7 +83,7 @@ suspend fun checkIfEmailExists(email: String): EmailExistsResult {
     }
 ```
 
-* Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate). We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```.
+* Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate). We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```. For testing purposes please use [venom](https://github.com/YarikSOffice/venom).
 ```kotlin
 val state = handle.getLiveData("viewState", 0)
 state.postValue(1) // doing so will automatically give us value of 1 upon PD
@@ -108,6 +108,9 @@ use
 class TimeRange(val from: Int, val to: Int)
 val timeRange: TimeRange? = null
 ```
+* Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
+For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro).
+
 * Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 
 # Before release
