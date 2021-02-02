@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UnauthorizedEventDispatcher @Inject constructor() {
     val unauthorizedEventEmitter = Channel<Boolean>()
 
-    suspend fun requestDeuthorization() {
+    suspend fun requestDeauthorization() {
         unauthorizedEventEmitter.send(true)
     }
 }
