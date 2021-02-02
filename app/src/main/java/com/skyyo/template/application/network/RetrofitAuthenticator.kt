@@ -27,7 +27,7 @@ class RetrofitAuthenticator @Inject constructor(
         return when (val accessToken = refreshToken()) {
             null -> {
                 @Suppress("GlobalCoroutineUsage")
-                GlobalScope.launch { unauthorizedEventDispatcher.requestDeuthorization() }
+                GlobalScope.launch { unauthorizedEventDispatcher.requestDeauthorization() }
                 null
             }
             else -> {
