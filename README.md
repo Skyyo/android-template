@@ -41,6 +41,7 @@ private fun validateSmth() {
     }
 ```    
 
+* Rule of a thumb: if we access the same object 3 or more times - please use ```apply```,```with```. If we want to hide big, non-priority (glance wise) code chunks - there is nothing wrong to use ```apply```, with even a 1 line under it.
 * Explicitly specify function return types if function output type isn't obvious from function name, or functions code block at first glance.
 
 instead of:
@@ -110,6 +111,36 @@ use:
 ```kotlin
 class TimeRange(val from: Int, val to: Int)
 val timeRange: TimeRange? = null
+```
+
+* When composing objects, consider the following approach:
+
+instead of:
+```kotlin
+when (val response = authRepo.verifyCode(
+            VerifyCodeRequest(
+                email, pin,
+                "someValue", "someValue",
+                "someValue", "someValue"
+            )
+        )) {
+            is VerifyCodeSuccess -> signIn()
+            ..
+        }
+```
+use:
+```kotlin
+val requestBody = VerifyCodeRequest(email, pin)
+        when (val response = authRepo.verifyCode(requestBody)) {
+            is VerifyCodeSuccess -> signIn()
+            ..
+        }
+        //if object constructor has many arguments,or has some additional logic - move it into provideX() function, like this:
+val requestBody = provideVerifyCodeRequestBody()
+        when (val response = authRepo.verifyCode(requestBody)) {
+            is VerifyCodeSuccess -> signIn()
+            ..
+        }
 ```
 
 * Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
