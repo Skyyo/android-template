@@ -4,14 +4,11 @@ import com.skyyo.template.BuildConfig
 import com.skyyo.template.application.network.RetrofitAuthenticator
 import com.skyyo.template.application.network.calls.AuthCalls
 import com.skyyo.template.application.persistance.DataStoreManager
-import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
-import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
-import okhttp3.Dispatcher
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,17 +23,11 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitAuthenticator(
-        apiCalls: Lazy<AuthCalls>,
+    fun provideRetrofit(
         dataStoreManager: DataStoreManager,
-        unauthorizedEventDispatcher: UnauthorizedEventDispatcher
-    ): RetrofitAuthenticator =
-        RetrofitAuthenticator(apiCalls, dataStoreManager, unauthorizedEventDispatcher)
-
-    @Singleton
-    @Provides
-    fun provideHeaderInjector(dataStoreManager: DataStoreManager): Interceptor {
-        return Interceptor { chain ->
+        authenticator: RetrofitAuthenticator
+    ): Retrofit {
+        val headerInjector = Interceptor { chain ->
             return@Interceptor chain.proceed(
                 chain.request()
                     .newBuilder()
@@ -47,35 +38,25 @@ object NetworkModule {
                     .build()
             )
         }
-    }
-
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(
-        headerInjector: Interceptor,
-        authenticator: RetrofitAuthenticator
-    ): OkHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(headerInjector)
-        addInterceptor(
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
+        val okHttpClient = OkHttpClient.Builder().apply {
+            addInterceptor(headerInjector)
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+                addInterceptor(loggingInterceptor)
             }
-        )
-        authenticator(authenticator)
-        dispatcher(Dispatcher())
-        connectTimeout(timeout = 10, TimeUnit.SECONDS)
-        writeTimeout(timeout = 10, TimeUnit.SECONDS)
-        readTimeout(timeout = 10, TimeUnit.SECONDS)
-    }.build()
-
-    @Singleton
-    @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
+            authenticator(authenticator)
+            connectTimeout(timeout = 10, TimeUnit.SECONDS)
+            writeTimeout(timeout = 10, TimeUnit.SECONDS)
+            readTimeout(timeout = 10, TimeUnit.SECONDS)
+        }.build()
+        return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+    }
 
     @Singleton
     @Provides
