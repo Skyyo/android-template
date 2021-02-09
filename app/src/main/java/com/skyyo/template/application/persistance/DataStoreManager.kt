@@ -1,10 +1,7 @@
 package com.skyyo.template.application.persistance
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.clear
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesKey
+import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +27,7 @@ class DataStoreManager @Inject constructor(private val dataStore: DataStore<Pref
     }
 
     private object PreferencesKeys {
-        val ACCESS_TOKEN = preferencesKey<String>("accessToken")
-        val REFRESH_TOKEN = preferencesKey<String>("refreshToken")
+        val ACCESS_TOKEN = stringPreferencesKey("accessToken")
+        val REFRESH_TOKEN = stringPreferencesKey("refreshToken")
     }
 }
