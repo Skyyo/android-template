@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             for (event in viewModel.events)
                 when (event) {
                     is UpdateProgress -> {
