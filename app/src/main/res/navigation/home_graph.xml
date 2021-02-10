@@ -21,7 +21,7 @@
         <action
             android:id="@+id/goHome"
             app:destination="@+id/fragmentHome"
-            app:popUpTo="@id/fragmentHome"
+            app:popUpTo="@id/fragmentSignIn"
             app:popUpToInclusive="true" />
     </fragment>
 

@@ -30,7 +30,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             for (event in viewModel.events)
                 when (event) {
                     is EmailValidationError -> {
