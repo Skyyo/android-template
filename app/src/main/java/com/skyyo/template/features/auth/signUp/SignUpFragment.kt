@@ -30,7 +30,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     }
 
     private fun observeEvents() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             for (event in viewModel.events)
                 when (event) {
                     is ShowLongToast -> longToast(getString(event.stringId))
