@@ -16,10 +16,10 @@ interface ProductsDao {
     @Query("UPDATE products_table SET liked = :isLiked WHERE id = :productId")
     suspend fun setProductLiked(productId: Int, isLiked: Boolean)
 
-    @Query("SELECT * from products_table")
+    @Query("SELECT * FROM products_table")
     fun getAllProducts(): Flow<List<Product>>
 
-    @Query("SELECT * from products_table WHERE addedToCart = 1")
+    @Query("SELECT * FROM products_table WHERE addedToCart = 1")
     fun getMyProducts(): Flow<List<Product>>
 
     @Query("SELECT COUNT(addedToCart) FROM products_table WHERE addedToCart = 1")
