@@ -1,7 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.4.30'
     ext.lifecycle_version = '2.2.0'
-    ext.groupie_version = '2.8.1'
+    ext.groupie_version = '2.9.0'
     ext.moshi_version = '1.11.0'
     ext.retrofit_version = '2.9.0'
     ext.hilt_version = '2.32-alpha'
