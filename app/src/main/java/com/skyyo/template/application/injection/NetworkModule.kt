@@ -4,6 +4,7 @@ import com.skyyo.template.BuildConfig
 import com.skyyo.template.application.network.RetrofitAuthenticator
 import com.skyyo.template.application.network.calls.AuthCalls
 import com.skyyo.template.application.persistance.DataStoreManager
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,10 +24,10 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(
+    fun provideOkHttpClient(
         dataStoreManager: DataStoreManager,
         authenticator: RetrofitAuthenticator
-    ): Retrofit {
+    ): OkHttpClient {
         val headerInjector = Interceptor { chain ->
             return@Interceptor chain.proceed(
                 chain.request()
@@ -38,7 +39,7 @@ object NetworkModule {
                     .build()
             )
         }
-        val okHttpClient = OkHttpClient.Builder().apply {
+        return OkHttpClient.Builder().apply {
             addInterceptor(headerInjector)
             if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -51,12 +52,15 @@ object NetworkModule {
             writeTimeout(timeout = 10, TimeUnit.SECONDS)
             readTimeout(timeout = 10, TimeUnit.SECONDS)
         }.build()
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(okHttpClient: Lazy<OkHttpClient>): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .callFactory { request -> okHttpClient.get().newCall(request) }
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
 
     @Singleton
     @Provides
