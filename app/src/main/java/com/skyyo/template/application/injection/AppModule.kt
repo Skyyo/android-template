@@ -3,8 +3,6 @@ package com.skyyo.template.application.injection
 import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
-import com.skyyo.template.application.network.calls.AuthCalls
-import com.skyyo.template.application.repositories.auth.AuthRepository
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.application.persistance.PaymentMethodsProtoStoreManager
 import com.skyyo.template.protobuff.PaymentMethodsSerializer
