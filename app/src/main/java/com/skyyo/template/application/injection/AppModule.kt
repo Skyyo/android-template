@@ -2,9 +2,7 @@ package com.skyyo.template.application.injection
 
 import android.content.Context
 import androidx.datastore.preferences.createDataStore
-import com.skyyo.template.application.network.calls.AuthCalls
 import com.skyyo.template.application.persistance.DataStoreManager
-import com.skyyo.template.application.repositories.auth.AuthRepository
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.Module
 import dagger.Provides
@@ -25,11 +23,4 @@ object AppModule {
     @Singleton
     @Provides
     fun provideUnauthorizedEventDispatcher(): UnauthorizedEventDispatcher = UnauthorizedEventDispatcher()
-
-    @Singleton
-    @Provides
-    fun provideAuthRepository(
-        authCalls: AuthCalls,
-        dataStoreManager: DataStoreManager
-    ): AuthRepository = AuthRepository(authCalls, dataStoreManager)
 }
