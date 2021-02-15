@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.skyyo.template.databinding.FragmentHomeBinding
 import com.skyyo.template.extensions.longToast
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -53,7 +53,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun applyInsets() {
-        binding.tvTitle.applySystemWindowInsetsToPadding(top = true)
-        // etc
+        binding.tvTitle.applyInsetter { type(statusBars = true) { padding(top = true) } }
     }
 }

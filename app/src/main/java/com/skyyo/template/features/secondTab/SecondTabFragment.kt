@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.skyyo.template.databinding.FragmentSecondTabBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
+import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
 class SecondTabFragment : Fragment() {
@@ -31,7 +31,6 @@ class SecondTabFragment : Fragment() {
     }
 
     private fun applyInsets() {
-        binding.tvTitle.applySystemWindowInsetsToPadding(top = true)
-        // etc
+        binding.tvTitle.applyInsetter { type(statusBars = true) { padding(top = true) } }
     }
 }
