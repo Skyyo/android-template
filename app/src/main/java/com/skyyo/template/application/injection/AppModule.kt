@@ -37,11 +37,4 @@ object AppModule {
     @Provides
     fun provideUnauthorizedEventDispatcher(): UnauthorizedEventDispatcher =
         UnauthorizedEventDispatcher()
-
-    @Singleton
-    @Provides
-    fun provideAuthRepository(
-        authCalls: AuthCalls,
-        dataStoreManager: DataStoreManager
-    ): AuthRepository = AuthRepository(authCalls, dataStoreManager)
 }
