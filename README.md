@@ -143,6 +143,19 @@ val requestBody = provideVerifyCodeRequestBody()
         }
 ```
 
+* Be pragmatic with [Kotlin Named Arguments](https://kotlinlang.org/docs/functions.html#named-arguments). Use them to make parts that are not self documenting easier to read:
+```kotlin
+class SignUpRequestBody(val email: String, val password: String)
+val requestBody = SignUpRequestBody(email, password)
+
+class ItemDecorator(val paddingTop: Int, val paddingLeft: Int, val paddingBottom: Int)
+val itemDecorator = ItemDecorator(
+    paddingTop = 16,
+    paddingLeft = 8,
+    paddingBottom = 2
+)
+```
+
 * Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro).
 * Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
@@ -158,6 +171,7 @@ For API < 26 versions - just [enable desugaring](https://developer.android.com/s
 * Run IDE's ```remove unused resources```. Be carefull to check the changes before commiting, so you don't accidentaly remove classes, which are just temporarily unused.
 * Run IDE's ```convert png's to webp's```.
 * Check the [r8](https://developer.android.com/studio/build/shrink-code#enable) rules to prevent release .apk/.aab issues as much as possible.
+* It won't hurt to use [canary leak](https://square.github.io/leakcanary/) to check whether you don't have serious issues with memory leaks
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
