@@ -161,6 +161,7 @@ For API < 26 versions - just [enable desugaring](https://developer.android.com/s
 
 * Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 * Remember to set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
+* Remember to optimize internet traffic using HEAD requests where makes sense.
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
