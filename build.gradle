@@ -1,10 +1,10 @@
 buildscript {
     ext.kotlin_version = '1.4.30'
-    ext.lifecycle_version = '2.2.0'
+    ext.lifecycle_version = '2.3.0'
     ext.groupie_version = '2.9.0'
     ext.moshi_version = '1.11.0'
     ext.retrofit_version = '2.9.0'
-    ext.hilt_version = '2.32-alpha'
+    ext.hilt_version = '2.33-beta'
     ext.room_version = '2.2.6'
 
     repositories {
