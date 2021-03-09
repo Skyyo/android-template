@@ -4,7 +4,7 @@ buildscript {
     ext.groupie_version = '2.9.0'
     ext.moshi_version = '1.11.0'
     ext.retrofit_version = '2.9.0'
-    ext.hilt_version = '2.33-alpha'
+    ext.hilt_version = '2.33-beta'
     ext.room_version = '2.2.6'
 
     repositories {
