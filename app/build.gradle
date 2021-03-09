@@ -91,7 +91,7 @@ dependencies {
     implementation('io.coil-kt:coil:1.1.1')
 
     //datastore
-    implementation "androidx.datastore:datastore:1.0.0-alpha05"
+    implementation "androidx.datastore:datastore:1.0.0-alpha07"
     implementation "com.google.protobuf:protobuf-javalite:3.10.0"
 
     debugImplementation "com.github.YarikSOffice.Venom:venom:0.3.1"
