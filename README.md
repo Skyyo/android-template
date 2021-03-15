@@ -178,3 +178,4 @@ For API < 26 versions - just [enable desugaring](https://developer.android.com/s
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
+* Guide on how to [offload code execution to the background thread](https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md#the-problem-of-ui-freezes)
