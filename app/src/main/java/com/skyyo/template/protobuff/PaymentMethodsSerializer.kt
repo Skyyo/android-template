@@ -10,7 +10,7 @@ import java.io.OutputStream
 object PaymentMethodsSerializer : Serializer<PaymentMethods> {
     override val defaultValue: PaymentMethods = PaymentMethods.getDefaultInstance()
 
-    override fun readFrom(input: InputStream): PaymentMethods {
+    override suspend fun readFrom(input: InputStream): PaymentMethods {
         try {
             return PaymentMethods.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -18,5 +18,5 @@ object PaymentMethodsSerializer : Serializer<PaymentMethods> {
         }
     }
 
-    override fun writeTo(t: PaymentMethods, output: OutputStream) = t.writeTo(output)
+    override suspend fun writeTo(t: PaymentMethods, output: OutputStream) = t.writeTo(output)
 }

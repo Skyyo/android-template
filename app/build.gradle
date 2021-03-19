@@ -79,7 +79,7 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation("androidx.hilt:hilt-navigation-fragment:1.0.0-beta01") {
         exclude group: 'androidx.navigation'
     }
@@ -91,7 +91,7 @@ dependencies {
     implementation('io.coil-kt:coil:1.1.1')
 
     //datastore
-    implementation "androidx.datastore:datastore:1.0.0-alpha07"
+    implementation "androidx.datastore:datastore:1.0.0-alpha08"
     implementation "com.google.protobuf:protobuf-javalite:3.10.0"
 
     debugImplementation "com.github.YarikSOffice.Venom:venom:0.3.1"
