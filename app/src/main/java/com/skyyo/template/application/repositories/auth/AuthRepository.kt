@@ -30,22 +30,22 @@ class AuthRepository @Inject constructor(
 
     suspend fun authGoogle(request: SocialSignInRequest): SocialSignInResult {
         val response = tryOrNull { authCalls.authGoogle(request) }
-        response ?: return SocialSignInNetworkError
+        response ?: return SocialSignInResult.NetworkError
         // TODO do conversions/store tokens etc.
-        return if (response.firstLogin) SocialSignInSuccessFirstTime else SocialSignInSuccess
+        return if (response.firstLogin) SocialSignInResult.SuccessFirstTime else SocialSignInResult.Success
     }
 
     suspend fun authApple(request: SocialSignInRequest): SocialSignInResult {
         val response = tryOrNull { authCalls.authApple(request) }
-        response ?: return SocialSignInNetworkError
+        response ?: return SocialSignInResult.NetworkError
         // TODO do conversions/store tokens etc.
-        return if (response.firstLogin) SocialSignInSuccessFirstTime else SocialSignInSuccess
+        return if (response.firstLogin) SocialSignInResult.SuccessFirstTime else SocialSignInResult.Success
     }
 
     suspend fun authFacebook(request: SocialSignInRequest): SocialSignInResult {
         val response = tryOrNull { authCalls.authFacebook(request) }
-        response ?: return SocialSignInNetworkError
+        response ?: return SocialSignInResult.NetworkError
         // TODO do conversions/store tokens etc.
-        return if (response.firstLogin) SocialSignInSuccessFirstTime else SocialSignInSuccess
+        return if (response.firstLogin) SocialSignInResult.SuccessFirstTime else SocialSignInResult.Success
     }
 }
