@@ -6,9 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.skyyo.template.R
 import com.skyyo.template.application.models.remote.SocialSignInRequest
 import com.skyyo.template.application.repositories.auth.AuthRepository
-import com.skyyo.template.application.repositories.auth.SocialSignInNetworkError
-import com.skyyo.template.application.repositories.auth.SocialSignInSuccess
-import com.skyyo.template.application.repositories.auth.SocialSignInSuccessFirstTime
+import com.skyyo.template.application.repositories.auth.SocialSignInResult
 import com.skyyo.template.extensions.isEmail
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,11 +49,11 @@ class SignInViewModel @Inject constructor(
 
     fun authGoogle(googleToken: String) = viewModelScope.launch(Dispatchers.IO) {
         when (authRepository.authGoogle(SocialSignInRequest(idToken = googleToken))) {
-            SocialSignInSuccessFirstTime -> {
+            SocialSignInResult.SuccessFirstTime -> {
             }
-            SocialSignInSuccess -> {
+            SocialSignInResult.Success -> {
             } // navigate somewhere etc
-            SocialSignInNetworkError -> {
+            SocialSignInResult.NetworkError -> {
             } // events.send(error)
         }
     }
