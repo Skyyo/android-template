@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.skyyo.template.R
 import com.skyyo.template.databinding.FragmentHomeBinding
+import com.skyyo.template.databinding.FragmentSignUpBinding
 import com.skyyo.template.extensions.longToast
 import com.skyyo.template.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,13 +17,13 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
-    private val binding by viewBinding(FragmentHomeBinding::bind)
+    private val binding by viewBinding(FragmentSignUpBinding::bind)
     private val viewModel by viewModels<SignUpViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyInsets()
-        with(binding) {
+        binding.apply {
             btnDoSmth.setOnClickListener { }
         }
         observeState()
