@@ -6,8 +6,6 @@ import com.skyyo.template.application.network.calls.AuthCalls
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.Lazy
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -24,23 +22,22 @@ class RetrofitAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        return when (val accessToken = refreshToken()) {
-            null -> {
-                @Suppress("GlobalCoroutineUsage")
-                GlobalScope.launch { unauthorizedEventDispatcher.requestDeauthorization() }
+        return runBlocking {
+            val accessToken = getNewAccessToken()
+            if (accessToken == null) {
+                unauthorizedEventDispatcher.requestDeauthorization()
                 null
-            }
-            else -> {
+            } else {
                 response.request.newBuilder().header("Authorization", "Bearer $accessToken").build()
             }
         }
     }
 
-    private fun refreshToken(): String? = runBlocking {
-        val refreshToken = dataStoreManager.getRefreshToken() ?: return@runBlocking null
+    private suspend fun getNewAccessToken(): String? {
+        val refreshToken = dataStoreManager.getRefreshToken() ?: return null
         val response = tryOrNull { apiCalls.get().refreshToken(RefreshTokenRequest(refreshToken)) }
-        response ?: return@runBlocking null
+        response ?: return null
         dataStoreManager.setTokens(response.accessToken, response.refreshToken)
-        response.accessToken
+        return response.accessToken
     }
 }

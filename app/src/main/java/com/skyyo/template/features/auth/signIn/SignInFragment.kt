@@ -22,7 +22,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyInsets()
-        with(binding) {
+        binding.apply {
             tvTitle.text = "Sign in Screen Title"
             btnDoSmth.setOnClickListener {}
         }
