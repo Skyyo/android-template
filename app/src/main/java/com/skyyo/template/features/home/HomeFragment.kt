@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         applyInsets()
         binding.apply {
-            tvTitle.text = "Home Screen Title"
+            tvTitle.text = "Home Screen Titlex"
             btnDoSmth.text = "Sign In"
             btnDoSmth.setOnClickListener { viewModel.goSignIn() }
         }
