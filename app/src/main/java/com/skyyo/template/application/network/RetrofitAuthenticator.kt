@@ -22,13 +22,22 @@ class RetrofitAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        return runBlocking {
-            val accessToken = getNewAccessToken()
-            if (accessToken == null) {
-                unauthorizedEventDispatcher.requestDeauthorization()
-                null
-            } else {
-                response.request.newBuilder().header("Authorization", "Bearer $accessToken").build()
+        synchronized(this) {
+            return runBlocking {
+                val requestAccessToken = response.request.header("Authorization")
+                val localAccessToken = dataStoreManager.getAccessToken()!!
+                if (requestAccessToken != localAccessToken) {
+                    return@runBlocking response.request.newBuilder()
+                        .header("Authorization", localAccessToken).build()
+                }
+                val newAccessToken = getNewAccessToken()
+                return@runBlocking if (newAccessToken == null) {
+                    unauthorizedEventDispatcher.requestDeauthorization()
+                    null
+                } else {
+                    response.request.newBuilder().header("Authorization", "Bearer $newAccessToken")
+                        .build()
+                }
             }
         }
     }
