@@ -184,3 +184,7 @@ layoutManager.recycleChildrenOnDetach = true
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
 * Guide on how to [offload code execution to the background thread](https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md#the-problem-of-ui-freezes)
+* Use [in-app](https://developer.android.com/guide/playcore/in-app-updates) updates to enhance UX. Sometimes we even want to block certain outdated versions. We always preffer in-app updates, but it's ok to create cusom solutions according to project specifications.
+* Carefully use [in-app reviews](https://developer.android.com/guide/playcore/in-app-review) to ensure that users leave high ratings on Google Play.
+* Always use [crashlytics](https://firebase.google.com/products/crashlytics?gclid=Cj0KCQjw38-DBhDpARIsADJ3kjk3-NryoOdZjKE4FADZ2CN0d0asEegcgGh658K2Wtsc2UwtXtvTtKEaAt5wEALw_wcB&gclsrc=aw.ds) to track the crashes.
+* Use [auto-fill](https://developer.android.com/guide/topics/text/autofill-optimize) where possible.
