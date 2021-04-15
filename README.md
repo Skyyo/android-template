@@ -166,6 +166,7 @@ setRecycledViewPool(sharedViewPool)
 layoutManager.recycleChildrenOnDetach = true
 ```
 * Set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
+* Use [max recycled views](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.RecycledViewPool#setMaxRecycledViews(int,%20int)) for item types that don't need the default pool of 5
 * Optimize internet traffic using HEAD requests where makes sense.
 
 # Continuous integration & pull requests
