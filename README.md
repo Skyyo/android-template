@@ -195,7 +195,8 @@ layoutManager.recycleChildrenOnDetach = true
 * Use [auto-fill](https://developer.android.com/guide/topics/text/autofill-optimize) where possible.
 
 # License
-```MIT License
+```
+MIT License
 
 Copyright (c) 2021 Denis Rudenko
 
