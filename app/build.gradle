@@ -62,7 +62,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "androidx.fragment:fragment-ktx:1.3.3"
     implementation 'androidx.core:core-ktx:1.6.0-alpha02'
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
+    // navigation-fragment-ktx:2.3.2 has changes that make HomeFragment
+    // initialized before any other destination. Don't update or use different approach
+    // can be caused by https://android.googlesource.com/platform/frameworks/support/+/9daa669cc1f310f6f128bab1e977d177f87ca58c
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.1"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
