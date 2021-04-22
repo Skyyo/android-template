@@ -159,13 +159,23 @@ val itemDecorator = ItemDecorator(
 * Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro). We should rely on [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). All examples are inside this [sheet](https://docs.google.com/spreadsheets/d/1rSUBATCkLolTeX4VORi14t_Ue3yz5WdJHng1WgM75Qs/edit#gid=0). Template already contains basic usages inside ```DateTimeExtensions.kt```
 
-* Always attempt to document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
-* Remember to set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
-* Remember to optimize internet traffic using HEAD requests where makes sense.
+* Document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
+* Optimize multiple recyclerViews which use the same items by:
+```kotlin
+setRecycledViewPool(sharedViewPool)
+layoutManager.recycleChildrenOnDetach = true
+```
+* Set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
+* Use [max recycled views](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.RecycledViewPool#setMaxRecycledViews(int,%20int)) for item types that don't need the default pool of 5
+* Optimize internet traffic using HEAD requests where makes sense.
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
-* If pull request contains code that should close the issue, please write: ```close #1, #2, #3```(number == issue number) somewhere in the PR description. This allows for automatic issue closing upon successfull PR merge.
+* If pull request contains code that should close the issue, please write: ```close #1, close #2```(number == issue number) somewhere in the PR description. This allows for automatic issue closing upon successfull PR merge.
+* Commit code as many times as you want while working on a feature. When the feature is ready - do a careful rebase over origin/master and squash all this stuff into one or two meaningful commits that clearly represent the feature, before opening a pull request.
+* Features should be splitted into logical chunks if they require a lot of code changes.
+* Attempt to keep PR size in range of 250 - 300 lines of code changed.
+
 
 # Before release
 * Check the app for [overdrawing](https://developer.android.com/topic/performance/rendering/overdraw) regions, and optimize wherever possible.
@@ -179,3 +189,31 @@ For API < 26 versions - just [enable desugaring](https://developer.android.com/s
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
 * Guide on how to [offload code execution to the background thread](https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md#the-problem-of-ui-freezes)
+* Use [in-app](https://developer.android.com/guide/playcore/in-app-updates) updates to enhance UX. Sometimes we even want to block certain outdated versions. We always prefer in-app updates, but it's ok to create custom solutions according to project specifications.
+* Carefully use [in-app reviews](https://developer.android.com/guide/playcore/in-app-review) to ensure that users leave high ratings on Google Play.
+* Always use [crashlytics](https://firebase.google.com/products/crashlytics?gclid=Cj0KCQjw38-DBhDpARIsADJ3kjk3-NryoOdZjKE4FADZ2CN0d0asEegcgGh658K2Wtsc2UwtXtvTtKEaAt5wEALw_wcB&gclsrc=aw.ds) to track the crashes.
+* Use [auto-fill](https://developer.android.com/guide/topics/text/autofill-optimize) where possible.
+
+# License
+```
+MIT License
+
+Copyright (c) 2021 Denis Rudenko
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.```
