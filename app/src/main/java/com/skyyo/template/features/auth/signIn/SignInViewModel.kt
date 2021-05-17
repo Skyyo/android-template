@@ -22,7 +22,7 @@ class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    val events = Channel<SignInEvent>()
+    val events = Channel<SignInEvent>(Channel.UNLIMITED)
     var email = handle.get<String>("email")
         set(value) {
             field = value
