@@ -11,5 +11,6 @@ typealias NavigationCommand = (NavController) -> Unit
 class NavigationDispatcher @Inject constructor() {
     val navigationEmitter = Channel<NavigationCommand>(Channel.UNLIMITED)
 
-    fun emit(navigationCommand: NavigationCommand) = navigationEmitter.offer(navigationCommand)
+    fun emit(navigationCommand: NavigationCommand) =
+        navigationEmitter.trySend(navigationCommand).isSuccess
 }
