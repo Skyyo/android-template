@@ -36,11 +36,11 @@ class SignInViewModel @Inject constructor(
 
     private fun isEmailValid() = when {
         email.isEmail -> {
-            events.trySend(EmailValidationError(stringId = null)).isSuccess
+            events.trySend(EmailValidationError(stringId = null))
             true
         }
         else -> {
-            events.trySend(EmailValidationError(stringId = R.string.app_name)).isSuccess
+            events.trySend(EmailValidationError(stringId = R.string.app_name))
             false
         }
     }
