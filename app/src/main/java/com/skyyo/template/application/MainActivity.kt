@@ -16,10 +16,7 @@ import com.skyyo.template.extensions.setupWithNavController
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 typealias onDestinationChanged = NavController.OnDestinationChangedListener
@@ -112,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         for (command in unauthorizedEventDispatcher.unauthorizedEventEmitter) {
             if (isFinishing) return
             @Suppress("GlobalCoroutineUsage")
+            @OptIn(DelicateCoroutinesApi::class)
             GlobalScope.launch(Dispatchers.IO) {
                 dataStoreManager.clearData()
             }
