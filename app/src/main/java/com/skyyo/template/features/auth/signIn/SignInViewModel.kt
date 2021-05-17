@@ -22,7 +22,7 @@ class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    val events = Channel<SignInEvent>()
+    val events = Channel<SignInEvent>(Channel.UNLIMITED)
     var email = handle.get<String>("email")
         set(value) {
             field = value
@@ -36,11 +36,11 @@ class SignInViewModel @Inject constructor(
 
     private fun isEmailValid() = when {
         email.isEmail -> {
-            events.trySend(EmailValidationError(stringId = null)).isSuccess
+            events.trySend(EmailValidationError(stringId = null))
             true
         }
         else -> {
-            events.trySend(EmailValidationError(stringId = R.string.app_name)).isSuccess
+            events.trySend(EmailValidationError(stringId = R.string.app_name))
             false
         }
     }

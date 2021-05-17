@@ -12,5 +12,5 @@ class NavigationDispatcher @Inject constructor() {
     val navigationEmitter = Channel<NavigationCommand>(Channel.UNLIMITED)
 
     fun emit(navigationCommand: NavigationCommand) =
-        navigationEmitter.trySend(navigationCommand).isSuccess
+        navigationEmitter.trySend(navigationCommand)
 }
