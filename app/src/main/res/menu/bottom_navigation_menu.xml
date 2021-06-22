@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeGraph"
+        android:id="@+id/fragmentHome"
         android:icon="@drawable/venom_dead_robot"
         android:title="first" />
     <item
-        android:id="@+id/secondTabGraph"
+        android:id="@+id/secondTabFragment"
         android:icon="@drawable/venom_death_bg"
         android:title="second" />
     <item
-        android:id="@+id/thirdTabGraph"
+        android:id="@+id/thirdTabFragment"
         android:icon="@drawable/abc_vector_test"
         android:title="third" />
 </menu>
