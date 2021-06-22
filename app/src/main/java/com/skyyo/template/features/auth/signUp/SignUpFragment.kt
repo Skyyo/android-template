@@ -5,13 +5,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.skyyo.template.R
 import com.skyyo.template.databinding.FragmentSignUpBinding
 import com.skyyo.template.extensions.longToast
 import com.skyyo.template.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
@@ -30,11 +32,13 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     }
 
     private fun observeEvents() {
-        viewLifecycleOwner.addRepeatingJob(Lifecycle.State.CREATED) {
-            for (event in viewModel.events)
-                when (event) {
-                    is ShowLongToast -> longToast(getString(event.stringId))
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                for (event in viewModel.events)
+                    when (event) {
+                        is ShowLongToast -> longToast(getString(event.stringId))
+                    }
+            }
         }
     }
 
