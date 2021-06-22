@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.skyyo.template.databinding.FragmentHomeBinding
 import com.skyyo.template.extensions.longToast
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -42,13 +44,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeEvents() {
-        viewLifecycleOwner.addRepeatingJob(Lifecycle.State.CREATED) {
-            for (event in viewModel.events)
-                when (event) {
-                    is UpdateProgress -> {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                for (event in viewModel.events)
+                    when (event) {
+                        is UpdateProgress -> {
+                        }
+                        is ShowLongToast -> longToast(getString(event.stringId))
                     }
-                    is ShowLongToast -> longToast(getString(event.stringId))
-                }
+            }
         }
     }
 
