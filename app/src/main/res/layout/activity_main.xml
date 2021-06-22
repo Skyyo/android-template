@@ -9,9 +9,11 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentHost"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/teal_700" />
+        android:background="@color/teal_700"
+        app:defaultNavHost="true" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv"

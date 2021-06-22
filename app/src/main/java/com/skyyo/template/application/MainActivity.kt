@@ -1,18 +1,19 @@
 package com.skyyo.template.application
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.databinding.ActivityMainBinding
 import com.skyyo.template.extensions.changeSystemBars
-import com.skyyo.template.extensions.setupWithNavController
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ typealias onDestinationChanged = NavController.OnDestinationChangedListener
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var currentNavController: LiveData<NavController>? = null
+    private lateinit var navController: NavController
     private val destinationChangedListener = onDestinationChanged { _, destination, _ ->
         when (destination.id) {
             R.id.fragmentSignIn,
@@ -55,41 +56,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        if (savedInstanceState == null) initNavigation(restore = false)
+        initNavigation()
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        initNavigation(restore = true)
-    }
-
-    private fun initNavigation(restore: Boolean) {
-        binding.bnv.setupWithNavController(
-            navGraphIds = listOf(
-                R.navigation.home_graph,
-                R.navigation.second_tab_graph,
-                R.navigation.third_tab_graph,
-            ),
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.fragmentHost,
-            intent = intent
-        ).also { controller ->
-            if (!restore) startDestination()?.let { id -> controller.value?.navigate(id) }
-            controller.observe(this) { navController ->
-                with(navController) {
-                    removeOnDestinationChangedListener(destinationChangedListener)
-                    addOnDestinationChangedListener(destinationChangedListener)
-                }
+    private fun initNavigation() {
+        (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
+            val navInflater = navHost.navController.navInflater
+            val navGraph = navInflater.inflate(R.navigation.navigation_graph).apply {
+                setStartDestination(startDestination())
             }
-            currentNavController = controller
+            navHost.navController.graph = navGraph
+            navController = navHost.navController
+            navController.addOnDestinationChangedListener(destinationChangedListener)
+            binding.bnv.setupWithNavController(navController)
         }
     }
 
-    private fun startDestination(): Int? {
+    private fun startDestination(): Int {
         val accessToken = runBlocking { dataStoreManager.getAccessToken() }
-        return if (accessToken == null) R.id.goSignIn else null
+        return if (accessToken == null) R.id.fragmentSignIn else R.id.fragmentHome
     }
 
     private fun updateBottomNavigationView(visible: Boolean) {
@@ -97,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         binding.bnv.isVisible = visible
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     private fun lockIntoPortrait() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }

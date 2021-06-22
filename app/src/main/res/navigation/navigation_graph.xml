@@ -2,8 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/homeGraph"
-    app:startDestination="@id/fragmentHome">
+    android:id="@+id/homeGraph">
 
     <fragment
         android:id="@+id/fragmentHome"
@@ -29,4 +28,15 @@
         android:id="@+id/fragmentSignUp"
         android:name="com.skyyo.template.features.auth.signUp.SignUpFragment"
         tools:layout="@layout/fragment_sign_up" />
+
+    <fragment
+        android:id="@+id/secondTabFragment"
+        android:name="com.skyyo.template.features.secondTab.SecondTabFragment"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/thirdTabFragment"
+        android:name="com.skyyo.template.features.thirdTab.ThirdTabFragment"
+        tools:layout="@layout/fragment_home" />
+
 </navigation>
