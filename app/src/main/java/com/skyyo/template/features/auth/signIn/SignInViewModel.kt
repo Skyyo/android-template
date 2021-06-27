@@ -45,7 +45,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun goHome() = navigationDispatcher.emit { it.navigate(R.id.goHome) }
+    fun goHome() = navigationDispatcher.emit { it.navigate(R.id.goHome) }
 
     fun authGoogle(googleToken: String) = viewModelScope.launch(Dispatchers.IO) {
         when (authRepository.authGoogle(SocialSignInRequest(idToken = googleToken))) {
