@@ -18,7 +18,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run ktlint
-        run: ./gradlew ktlintDebugCheck --continue
+        run: ./gradlew ktlintCheck --continue
   lint_job:
     runs-on: ubuntu-latest
     continue-on-error: true

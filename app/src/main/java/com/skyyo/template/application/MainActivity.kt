@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
             val navInflater = navHost.navController.navInflater
             val navGraph = navInflater.inflate(R.navigation.main_graph).apply {
-                startDestination = provideStartDestination()
+                setStartDestination(provideStartDestination())
             }
             navHost.navController.graph = navGraph
             navController = navHost.navController
