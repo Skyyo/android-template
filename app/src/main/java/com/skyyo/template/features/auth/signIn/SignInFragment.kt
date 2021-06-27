@@ -26,19 +26,21 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         applyInsets()
         binding.apply {
             tvTitle.text = "Sign in Screen Title"
-            btnDoSmth.setOnClickListener {}
+            btnDoSmth.setOnClickListener { viewModel.goHome() }
         }
         observeEvents()
     }
 
     private fun observeEvents() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 for (event in viewModel.events)
                     when (event) {
                         is EmailValidationError -> {
                         }
                         is ShowLongToast -> longToast(getString(event.stringId))
+                        is UpdateProgress -> {
+                        }
                     }
             }
         }
