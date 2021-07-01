@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.skyyo.template.R
 import com.skyyo.template.databinding.FragmentThirdTabBinding
+import com.skyyo.template.extensions.interceptBackPress
 import com.skyyo.template.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -17,6 +18,7 @@ class ThirdTabFragment : Fragment(R.layout.fragment_third_tab) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyInsets()
+        interceptBackPress()
     }
 
     private fun applyInsets() {
