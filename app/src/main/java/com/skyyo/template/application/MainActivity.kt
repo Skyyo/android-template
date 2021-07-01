@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -26,20 +27,23 @@ typealias onDestinationChanged = NavController.OnDestinationChangedListener
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val destinationChangedListener = onDestinationChanged { _, destination, _ ->
-        when (destination.id) {
-            R.id.fragmentSignIn,
-            R.id.fragmentSignUp -> {
-                binding.fragmentHost.changeSystemBars(light = false)
-                updateBottomNavigationView(visible = false)
-            }
-            else -> {
-                binding.fragmentHost.changeSystemBars(light = true)
-                updateBottomNavigationView(visible = true)
-            }
-        }
+    private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
+        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
+        // change fragmentHost background color, hide bottomNavigationView etc.
     }
-
+//    private val destinationChangedListener = onDestinationChanged { _, destination, _ ->
+//        when (destination.id) {
+//            R.id.fragmentSignIn,
+//            R.id.fragmentSignUp -> {
+//                binding.fragmentHost.changeSystemBars(light = false)
+//                updateBottomNavigationView(visible = false)
+//            }
+//            else -> {
+//                binding.fragmentHost.changeSystemBars(light = true)
+//                updateBottomNavigationView(visible = true)
+//            }
+//        }
+//    }
     @Inject
     lateinit var navigationDispatcher: NavigationDispatcher
 
