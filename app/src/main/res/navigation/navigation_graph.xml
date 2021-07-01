@@ -21,7 +21,9 @@
         <argument
             android:name="lightBars"
             android:defaultValue="false" />
-
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="false" />
         <action
             android:id="@+id/goHome"
             app:destination="@+id/fragmentHome"
@@ -35,6 +37,9 @@
         tools:layout="@layout/fragment_sign_up">
         <argument
             android:name="lightBars"
+            android:defaultValue="false" />
+        <argument
+            android:name="bottomNavigationVisible"
             android:defaultValue="false" />
     </fragment>
 
