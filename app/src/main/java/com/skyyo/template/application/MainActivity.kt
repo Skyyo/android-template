@@ -111,4 +111,8 @@ class MainActivity : AppCompatActivity() {
             command.invoke(Navigation.findNavController(this@MainActivity, R.id.fragmentHost))
         }
     }
+
+    fun returnToTopOfRootStack() {
+        binding.bnv.selectedItemId = R.id.fragmentHome
+    }
 }

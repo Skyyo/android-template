@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.skyyo.template.R
 import com.skyyo.template.databinding.FragmentSecondTabBinding
+import com.skyyo.template.extensions.interceptBackPress
 import com.skyyo.template.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -17,6 +18,7 @@ class SecondTabFragment : Fragment(R.layout.fragment_second_tab) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyInsets()
+        interceptBackPress()
     }
 
     private fun applyInsets() {
