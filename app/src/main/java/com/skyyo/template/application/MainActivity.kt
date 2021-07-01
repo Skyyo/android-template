@@ -1,8 +1,8 @@
 package com.skyyo.template.application
 
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -24,12 +24,9 @@ typealias onDestinationChanged = NavController.OnDestinationChangedListener
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val destinationChangedListener = onDestinationChanged { _, destination, _ ->
-        when (destination.id) {
-            R.id.fragmentSignIn,
-            R.id.fragmentSignUp -> binding.fragmentHost.changeSystemBars(light = false)
-            else -> binding.fragmentHost.changeSystemBars(light = true)
-        }
+    private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
+        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
+        // change fragmentHost background color, hide bottomNavigationView etc.
     }
 
     @Inject
@@ -52,8 +49,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
         lifecycleScope.launchWhenResumed { observeNavigationCommands() }
     }
-
-    override fun onSupportNavigateUp() = navController.navigateUp()
 
     private fun initNavigation() {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->

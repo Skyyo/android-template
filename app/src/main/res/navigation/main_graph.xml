@@ -18,6 +18,10 @@
         android:id="@+id/fragmentSignIn"
         android:name="com.skyyo.template.features.auth.signIn.SignInFragment"
         tools:layout="@layout/fragment_sign_in">
+        <argument
+            android:name="lightBars"
+            android:defaultValue="false" />
+
         <action
             android:id="@+id/goHome"
             app:destination="@+id/fragmentHome"
@@ -28,5 +32,9 @@
     <fragment
         android:id="@+id/fragmentSignUp"
         android:name="com.skyyo.template.features.auth.signUp.SignUpFragment"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up">
+        <argument
+            android:name="lightBars"
+            android:defaultValue="false" />
+    </fragment>
 </navigation>
