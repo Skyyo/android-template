@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/homeGraph">
+    android:id="@+id/main_graph"
+    tools:ignore="InvalidNavigation">
 
     <fragment
         android:id="@+id/fragmentHome"
@@ -17,6 +18,12 @@
         android:id="@+id/fragmentSignIn"
         android:name="com.skyyo.template.features.auth.signIn.SignInFragment"
         tools:layout="@layout/fragment_sign_in">
+        <argument
+            android:name="lightBars"
+            android:defaultValue="false" />
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="false" />
         <action
             android:id="@+id/goHome"
             app:destination="@+id/fragmentHome"
@@ -27,7 +34,14 @@
     <fragment
         android:id="@+id/fragmentSignUp"
         android:name="com.skyyo.template.features.auth.signUp.SignUpFragment"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up">
+        <argument
+            android:name="lightBars"
+            android:defaultValue="false" />
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/secondTabFragment"

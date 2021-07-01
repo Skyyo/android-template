@@ -1,6 +1,5 @@
 package com.skyyo.template.application
 
-import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -27,18 +26,10 @@ typealias onDestinationChanged = NavController.OnDestinationChangedListener
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val destinationChangedListener = onDestinationChanged { _, destination, _ ->
-        when (destination.id) {
-            R.id.fragmentSignIn,
-            R.id.fragmentSignUp -> {
-                binding.fragmentHost.changeSystemBars(light = false)
-                updateBottomNavigationView(visible = false)
-            }
-            else -> {
-                binding.fragmentHost.changeSystemBars(light = true)
-                updateBottomNavigationView(visible = true)
-            }
-        }
+    private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
+        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
+        binding.bnv.isVisible = arguments?.getBoolean("bottomNavigationVisible") ?: true
+        // change fragmentHost background color, etc.
     }
 
     @Inject
@@ -83,12 +74,6 @@ class MainActivity : AppCompatActivity() {
         return if (accessToken == null) R.id.fragmentSignIn else R.id.fragmentHome
     }
 
-    private fun updateBottomNavigationView(visible: Boolean) {
-        // animate as slide or smth
-        binding.bnv.isVisible = visible
-    }
-
-    @SuppressLint("SourceLockedOrientationActivity")
     private fun lockIntoPortrait() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
