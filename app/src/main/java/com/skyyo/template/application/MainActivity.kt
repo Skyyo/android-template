@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
             val navInflater = navHost.navController.navInflater
             val navGraph = navInflater.inflate(R.navigation.navigation_graph).apply {
-                setStartDestination(startDestination())
+                setStartDestination(provideStartDestination())
             }
             navHost.navController.graph = navGraph
             navController = navHost.navController
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startDestination(): Int {
+    private fun provideStartDestination(): Int {
         val accessToken = runBlocking { dataStoreManager.getAccessToken() }
         return if (accessToken == null) R.id.fragmentSignIn else R.id.fragmentHome
     }
