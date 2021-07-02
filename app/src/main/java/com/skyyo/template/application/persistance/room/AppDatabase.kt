@@ -5,11 +5,16 @@ import androidx.room.RoomDatabase
 import com.skyyo.template.application.models.local.Product
 
 @Database(
+    version = 1,
+    exportSchema = true,
     entities = [
         Product::class
     ],
-    version = 1,
-    exportSchema = false
+    autoMigrations = [
+//        AutoMigration(from = 1, to = 2)
+        // when updating just add AutoMigration (from = 2, to = 3) and change the DB version
+    ],
+
 )
 
 abstract class AppDatabase : RoomDatabase() {

@@ -13,9 +13,15 @@ android {
         applicationId "com.skyyo.template"
         minSdkVersion 23
         targetSdkVersion 30
+        //don't forget about database versions & migrations!
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
     buildTypes {
         release {
