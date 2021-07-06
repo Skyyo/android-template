@@ -40,6 +40,17 @@ private fun validateSmth() {
         }
     }
 ```    
+* Preffering if/else to let/run avoids cryptic bugs:
+```kotlin
+var x: String? = "0"
+        x?.let {
+            //let block will be executed
+            executeSmth()
+        } ?: run {
+            //run block will be also executed since executeSmth() returned null
+        }
+fun executeSmth(): String? = null
+```  
 
 * Rule of a thumb: if we access the same object 3 or more times - please use ```apply```,```with```. If we want to hide big, non-priority (glance wise) code chunks - there is nothing wrong to use ```apply```, with even a 1 line under it.
 * Explicitly specify function return types if function output type isn't obvious from function name, or functions code block at first glance.
