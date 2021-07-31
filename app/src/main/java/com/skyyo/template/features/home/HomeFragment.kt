@@ -48,9 +48,9 @@ class HomeFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 for (event in viewModel.events)
                     when (event) {
-                        is UpdateProgress -> {
+                        is HomeEvent.UpdateProgress -> {
                         }
-                        is ShowLongToast -> longToast(getString(event.stringId))
+                        is HomeEvent.ShowLongToast -> longToast(getString(event.stringId))
                     }
             }
         }
