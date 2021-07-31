@@ -2,6 +2,7 @@ package com.skyyo.template.features.auth.signIn
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -10,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.skyyo.template.R
 import com.skyyo.template.databinding.FragmentSignInBinding
 import com.skyyo.template.extensions.longToast
+import com.skyyo.template.extensions.onImeDoneListener
 import com.skyyo.template.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -26,9 +28,20 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         applyInsets()
         binding.apply {
             tvTitle.text = "Sign in Screen Title"
+            etEmail.apply {
+                onImeDoneListener { viewModel.onEmailEntered(text.toString()) }
+                doAfterTextChanged { viewModel.onEmailEntered(text.toString()) }
+            }
             btnDoSmth.setOnClickListener { viewModel.goHome() }
         }
+        observeEmail()
         observeEvents()
+    }
+
+    private fun observeEmail() {
+        viewModel.email.observe(viewLifecycleOwner) { inputModel ->
+            binding.tilEmail.error = inputModel.errorId?.let { getString(it) }
+        }
     }
 
     private fun observeEvents() {
@@ -36,10 +49,10 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 for (event in viewModel.events)
                     when (event) {
-                        is EmailValidationError -> {
+                        is SignInEvent.EmailValidationError -> {
                         }
-                        is ShowLongToast -> longToast(getString(event.stringId))
-                        is UpdateProgress -> {
+                        is SignInEvent.ShowLongToast -> longToast(getString(event.stringId))
+                        else -> {
                         }
                     }
             }
