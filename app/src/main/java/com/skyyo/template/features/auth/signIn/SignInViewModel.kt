@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skyyo.template.R
+import com.skyyo.template.application.models.local.InputModel
 import com.skyyo.template.application.models.remote.SocialSignInRequest
 import com.skyyo.template.application.repositories.auth.AuthRepository
 import com.skyyo.template.application.repositories.auth.SocialSignInResult
@@ -23,26 +24,20 @@ class SignInViewModel @Inject constructor(
 ) : ViewModel() {
 
     val events = Channel<SignInEvent>(Channel.UNLIMITED)
-    var email = handle.get<String>("email")
-        set(value) {
-            field = value
-            handle.set("email", field)
-        }
+    val email = handle.getLiveData("cardNumber", InputModel())
 
     fun onEmailEntered(input: String) {
-        email = input
-        isEmailValid()
+        email.value = email.value!!.copy(inputValue = input)
+        validateEmail()
     }
 
-    private fun isEmailValid() = when {
-        email.isEmail -> {
-            events.trySend(EmailValidationError(stringId = null))
-            true
+    private fun validateEmail() {
+        val errorId = when {
+            email.value?.inputValue?.isEmpty() == true -> R.string.email_is_empty
+            email.value?.inputValue.isEmail -> null
+            else -> R.string.email_is_not_valid
         }
-        else -> {
-            events.trySend(EmailValidationError(stringId = R.string.app_name))
-            false
-        }
+        email.value = email.value?.copy(errorId = errorId)
     }
 
     fun goHome() = navigationDispatcher.emit { it.navigate(R.id.goHome) }
