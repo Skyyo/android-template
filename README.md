@@ -204,6 +204,8 @@ layoutManager.recycleChildrenOnDetach = true
 * Carefully use [in-app reviews](https://developer.android.com/guide/playcore/in-app-review) to ensure that users leave high ratings on Google Play.
 * Always use [crashlytics](https://firebase.google.com/products/crashlytics?gclid=Cj0KCQjw38-DBhDpARIsADJ3kjk3-NryoOdZjKE4FADZ2CN0d0asEegcgGh658K2Wtsc2UwtXtvTtKEaAt5wEALw_wcB&gclsrc=aw.ds) to track the crashes.
 * Use [auto-fill](https://developer.android.com/guide/topics/text/autofill-optimize) where possible.
+* Use scroll indicators for screens which are might not appear scrollable otherwise.
+* Attemp to use min/max data models: shrinked *User* model returned from DB for list of users, and complete *User* model for details screen.
 
 # License
 ```
