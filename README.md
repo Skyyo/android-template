@@ -178,6 +178,7 @@ layoutManager.recycleChildrenOnDetach = true
 * Set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
 * Use [max recycled views](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.RecycledViewPool#setMaxRecycledViews(int,%20int)) for item types that don't need the default pool of 5
 * Optimize internet traffic using HEAD requests where makes sense.
+* Ensure that you're handling system insets on all screens, so app falls under [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) category.
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
