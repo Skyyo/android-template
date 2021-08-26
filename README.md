@@ -197,6 +197,7 @@ layoutManager.recycleChildrenOnDetach = true
 * It won't hurt to use [canary leak](https://square.github.io/leakcanary/) to check whether you don't have serious issues with memory leaks.
 * [Strict mode](https://developer.android.com/reference/android/os/StrictMode) might be helpfull to do a few optimizations.
 * If we decouple app language from the system language, please use [SplitInstallManager](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager) or disable ubundling language files using [android.bundle.language.enableSplit = false](https://stackoverflow.com/a/53276459/5704989)
+* Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
@@ -207,6 +208,7 @@ layoutManager.recycleChildrenOnDetach = true
 * Use [auto-fill](https://developer.android.com/guide/topics/text/autofill-optimize) where possible.
 * Use scroll indicators for screens which are might not appear scrollable otherwise.
 * Attemp to use min/max data models: shrinked *User* model returned from DB for list of users, and complete *User* model for details screen.
+* The ```android:allowBackup=true``` tag can lead to a broken app state that can cause constant app crashes. Benefits of using this feature are almost non-existing, so we keep it off by default. [Explanation](https://www.reddit.com/r/androiddev/comments/ov18d2/this_is_why_your_subclassed_application_isnt/)
 
 # License
 ```
