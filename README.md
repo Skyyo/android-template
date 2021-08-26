@@ -180,6 +180,9 @@ layoutManager.recycleChildrenOnDetach = true
 * Optimize internet traffic using HEAD requests where makes sense.
 * Ensure that you're handling system insets on all screens, so app falls under [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) category.
 * Never use ```shareIn``` or ```stateIn``` to create a new flow that’s returned when calling a function. [Explanation](https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74) 
+* Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
+* Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
+
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
@@ -198,8 +201,6 @@ layoutManager.recycleChildrenOnDetach = true
 * It won't hurt to use [canary leak](https://square.github.io/leakcanary/) to check whether you don't have serious issues with memory leaks.
 * [Strict mode](https://developer.android.com/reference/android/os/StrictMode) might be helpfull to do a few optimizations.
 * If we decouple app language from the system language, please use [SplitInstallManager](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager) or disable ubundling language files using [android.bundle.language.enableSplit = false](https://stackoverflow.com/a/53276459/5704989)
-* Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
-* Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
