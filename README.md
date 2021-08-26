@@ -199,6 +199,7 @@ layoutManager.recycleChildrenOnDetach = true
 * [Strict mode](https://developer.android.com/reference/android/os/StrictMode) might be helpfull to do a few optimizations.
 * If we decouple app language from the system language, please use [SplitInstallManager](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager) or disable ubundling language files using [android.bundle.language.enableSplit = false](https://stackoverflow.com/a/53276459/5704989)
 * Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
+* Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
