@@ -178,6 +178,7 @@ layoutManager.recycleChildrenOnDetach = true
 * Set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
 * Use [max recycled views](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.RecycledViewPool#setMaxRecycledViews(int,%20int)) for item types that don't need the default pool of 5
 * Optimize internet traffic using HEAD requests where makes sense.
+* Ensure that you're handling system insets on all screens, so app falls under [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) category.
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
@@ -204,6 +205,8 @@ layoutManager.recycleChildrenOnDetach = true
 * Carefully use [in-app reviews](https://developer.android.com/guide/playcore/in-app-review) to ensure that users leave high ratings on Google Play.
 * Always use [crashlytics](https://firebase.google.com/products/crashlytics?gclid=Cj0KCQjw38-DBhDpARIsADJ3kjk3-NryoOdZjKE4FADZ2CN0d0asEegcgGh658K2Wtsc2UwtXtvTtKEaAt5wEALw_wcB&gclsrc=aw.ds) to track the crashes.
 * Use [auto-fill](https://developer.android.com/guide/topics/text/autofill-optimize) where possible.
+* Use scroll indicators for screens which are might not appear scrollable otherwise.
+* Attemp to use min/max data models: shrinked *User* model returned from DB for list of users, and complete *User* model for details screen.
 
 # License
 ```
