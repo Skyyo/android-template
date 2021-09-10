@@ -8,12 +8,11 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 android {
-    compileSdkVersion 30
+    compileSdk 30
     defaultConfig {
         applicationId "com.skyyo.template"
-        minSdkVersion 23
-        targetSdkVersion 30
-        //don't forget about database versions & migrations!
+        minSdk 23
+        targetSdk 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -36,13 +35,6 @@ android {
         }
     }
     buildFeatures.viewBinding = true
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
 }
 detekt {
     config = files("$rootDir/.detekt/config.yml")
