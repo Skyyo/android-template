@@ -179,6 +179,10 @@ layoutManager.recycleChildrenOnDetach = true
 * Use [max recycled views](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.RecycledViewPool#setMaxRecycledViews(int,%20int)) for item types that don't need the default pool of 5
 * Optimize internet traffic using HEAD requests where makes sense.
 * Ensure that you're handling system insets on all screens, so app falls under [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) category.
+* Never use ```shareIn``` or ```stateIn``` to create a new flow that’s returned when calling a function. [Explanation](https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74) 
+* Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
+* Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
+
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
@@ -197,7 +201,6 @@ layoutManager.recycleChildrenOnDetach = true
 * It won't hurt to use [canary leak](https://square.github.io/leakcanary/) to check whether you don't have serious issues with memory leaks.
 * [Strict mode](https://developer.android.com/reference/android/os/StrictMode) might be helpfull to do a few optimizations.
 * If we decouple app language from the system language, please use [SplitInstallManager](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager) or disable ubundling language files using [android.bundle.language.enableSplit = false](https://stackoverflow.com/a/53276459/5704989)
-* Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
@@ -209,6 +212,7 @@ layoutManager.recycleChildrenOnDetach = true
 * Use scroll indicators for screens which are might not appear scrollable otherwise.
 * Attemp to use min/max data models: shrinked *User* model returned from DB for list of users, and complete *User* model for details screen.
 * The ```android:allowBackup=true``` tag can lead to a broken app state that can cause constant app crashes. Benefits of using this feature are almost non-existing, so we keep it off by default. [Explanation](https://www.reddit.com/r/androiddev/comments/ov18d2/this_is_why_your_subclassed_application_isnt/)
+* Remember that to keep everyone (including yourself) happy, we can always just increase the database schema during developtement, and rely on [fallbackToDestructiveMigration](https://developer.android.com/reference/android/arch/persistence/room/RoomDatabase.Builder#fallbacktodestructivemigration) when using Room. This will prevent people from getting crashes of they don't clear app data, and us from writing migrations during develpment process. Just ensure that you revert the version to 1 for the release.
 
 # License
 ```
