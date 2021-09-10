@@ -1,5 +1,7 @@
 package com.skyyo.template.application
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -78,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     private suspend fun observeUnauthorizedEvent() {
         for (command in unauthorizedEventDispatcher.unauthorizedEventEmitter) {
             if (isFinishing) return
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
             @Suppress("GlobalCoroutineUsage")
             @OptIn(DelicateCoroutinesApi::class)
             GlobalScope.launch(Dispatchers.IO) {
