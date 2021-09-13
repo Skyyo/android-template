@@ -8,7 +8,7 @@ Template repo with various common components, to reduce "project setup" time
 5. [Bottom navigation view & Room ](https://github.com/Skyyo/android-template/tree/bottom_navigation_view_room)
 
 After setup:
-1. Change package name everywhere ( including proto files )
+1. Change package name everywhere ( including proto files ). [Link to painless solution](https://stackoverflow.com/questions/16804093/rename-package-in-android-studio/35057550#35057550)
 2. Update readme.md
 
 
