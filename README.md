@@ -183,6 +183,7 @@ layoutManager.recycleChildrenOnDetach = true
 * Never use ```shareIn``` or ```stateIn``` to create a new flow that’s returned when calling a function. [Explanation](https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74) 
 * Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
 * Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
+* Be very carefull with stateFlow, since it's not exact replacement for liveData. [Change proposal](https://github.com/Kotlin/kotlinx.coroutines/issues/2223), [motivation](https://bladecoder.medium.com/kotlins-flow-in-viewmodels-it-s-complicated-556b472e281a)
 
 
 # Continuous integration & pull requests
