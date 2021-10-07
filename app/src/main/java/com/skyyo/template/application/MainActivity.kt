@@ -28,9 +28,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
-        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
-        binding.bnv.isVisible = arguments?.getBoolean("bottomNavigationVisible") ?: true
-        // change fragmentHost background color, etc.
+        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: false)
+        binding.bnv.isVisible = arguments?.getBoolean("bottomNavigationVisible") ?: false
     }
 
     @Inject
