@@ -1,11 +1,16 @@
-package com.skyyo.template.features.thirdTab
+package com.skyyo.template.features.signIn
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -14,16 +19,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.skyyo.template.theme.TemplateTheme
-import com.skyyo.template.utils.extensions.interceptBackPress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ThirdTabFragment : Fragment() {
+class SignInFragment : Fragment() {
 
-    private val viewModel: ThirdTabViewModel by viewModels()
+    private val viewModel: SignInViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +48,7 @@ class ThirdTabFragment : Fragment() {
                 launch {
                     events.collect { event ->
                         when (event) {
-                            is ThirdTabEvent.ShowLongToast -> {
+                            is SignInEvent.ShowLongToast -> {
                             }
                         }
                     }
@@ -53,13 +57,16 @@ class ThirdTabFragment : Fragment() {
 
             TemplateTheme {
                 ProvideWindowInsets {
+                    Box(Modifier.fillMaxSize()) {
+                        Button(
+                            modifier = Modifier.align(Alignment.Center),
+                            onClick = viewModel::goHome
+                        ) {
+                            Text("go home")
+                        }
+                    }
                 }
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        interceptBackPress()
     }
 }

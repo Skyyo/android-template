@@ -1,4 +1,4 @@
-package com.skyyo.template.extensions
+package com.skyyo.template.utils.extensions
 
 import android.app.Activity
 import android.content.Context
@@ -15,9 +15,9 @@ fun View?.hideKeyboard(activity: Activity?) {
 }
 
 fun Fragment?.showKeyboard() {
-    (this?.activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
+    (this?.activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(
+        view?.findFocus(),
         InputMethodManager.SHOW_IMPLICIT,
-        InputMethodManager.HIDE_IMPLICIT_ONLY
     )
 }
 

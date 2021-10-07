@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeSplash"
         android:usesCleartextTraffic="true">
-        <activity android:name=".application.MainActivity">
+        <activity
+            android:name=".application.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

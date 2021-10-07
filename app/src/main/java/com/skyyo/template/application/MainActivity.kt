@@ -15,7 +15,7 @@ import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.application.persistance.room.AppDatabase
 import com.skyyo.template.databinding.ActivityMainBinding
-import com.skyyo.template.extensions.changeSystemBars
+import com.skyyo.template.utils.extensions.changeSystemBars
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +29,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
-        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
-        binding.bnv.isVisible = arguments?.getBoolean("bottomNavigationVisible") ?: true
-        // change fragmentHost background color, etc.
+        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: false)
+        binding.bnv.isVisible = arguments?.getBoolean("bottomNavigationVisible") ?: false
     }
 
     @Inject

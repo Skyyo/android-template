@@ -1,8 +1,7 @@
-package com.skyyo.template.features.thirdTab
+package com.skyyo.template.features.signUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -14,16 +13,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.skyyo.template.theme.TemplateTheme
-import com.skyyo.template.utils.extensions.interceptBackPress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ThirdTabFragment : Fragment() {
+class SignUpFragment : Fragment() {
 
-    private val viewModel: ThirdTabViewModel by viewModels()
+    private val viewModel by viewModels<SignUpViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +42,7 @@ class ThirdTabFragment : Fragment() {
                 launch {
                     events.collect { event ->
                         when (event) {
-                            is ThirdTabEvent.ShowLongToast -> {
+                            is SignUpEvent.ShowLongToast -> {
                             }
                         }
                     }
@@ -56,10 +54,5 @@ class ThirdTabFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        interceptBackPress()
     }
 }
