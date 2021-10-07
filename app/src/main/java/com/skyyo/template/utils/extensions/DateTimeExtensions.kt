@@ -1,4 +1,4 @@
-package com.skyyo.template.extensions
+package com.skyyo.template.utils.extensions
 
 // date & time
 // fun localDateTime() = LocalDateTime.now().withNano(0).toString()

@@ -13,7 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.databinding.ActivityMainBinding
-import com.skyyo.template.extensions.changeSystemBars
+import com.skyyo.template.utils.extensions.changeSystemBars
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import com.skyyo.template.utils.eventDispatchers.UnauthorizedEventDispatcher
 import dagger.hilt.android.AndroidEntryPoint

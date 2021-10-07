@@ -8,7 +8,7 @@ Template repo with various common components, to reduce "project setup" time
 5. [Bottom navigation view & Room ](https://github.com/Skyyo/android-template/tree/bottom_navigation_view_room)
 
 After setup:
-1. Change package name everywhere ( including proto files )
+1. Change package name everywhere ( including proto files ). [Link to painless solution](https://stackoverflow.com/questions/16804093/rename-package-in-android-studio/35057550#35057550)
 2. Update readme.md
 
 
@@ -170,6 +170,7 @@ val itemDecorator = ItemDecorator(
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro). We should rely on [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). All examples are inside this [sheet](https://docs.google.com/spreadsheets/d/1rSUBATCkLolTeX4VORi14t_Ue3yz5WdJHng1WgM75Qs/edit#gid=0). Template already contains basic usages inside ```DateTimeExtensions.kt```
 
 * Document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
+* Take responsibility for keeping libraries updated to the latest versions available. Be very carefull, read all release notes & be prepared that there might be subtle, destructive changed.
 * Optimize multiple recyclerViews which use the same items by:
 ```kotlin
 setRecycledViewPool(sharedViewPool)
@@ -182,6 +183,7 @@ layoutManager.recycleChildrenOnDetach = true
 * Never use ```shareIn``` or ```stateIn``` to create a new flow that’s returned when calling a function. [Explanation](https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74) 
 * Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
 * Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
+* Be very carefull with stateFlow, since it's not exact replacement for liveData. [Change proposal](https://github.com/Kotlin/kotlinx.coroutines/issues/2223), [motivation](https://bladecoder.medium.com/kotlins-flow-in-viewmodels-it-s-complicated-556b472e281a)
 
 
 # Continuous integration & pull requests

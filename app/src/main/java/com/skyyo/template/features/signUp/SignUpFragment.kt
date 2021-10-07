@@ -1,4 +1,4 @@
-package com.skyyo.template.features.home
+package com.skyyo.template.features.signUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class SignUpFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel by viewModels<SignUpViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
                 launch {
                     events.collect { event ->
                         when (event) {
-                            is HomeEvent.ShowLongToast -> {
+                            is SignUpEvent.ShowLongToast -> {
                             }
                         }
                     }
