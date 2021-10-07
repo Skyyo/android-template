@@ -5,7 +5,7 @@ import com.skyyo.template.application.models.remote.SignUpRequest
 import com.skyyo.template.application.models.remote.SocialSignInRequest
 import com.skyyo.template.application.network.calls.AuthCalls
 import com.skyyo.template.application.persistance.DataStoreManager
-import com.skyyo.template.extensions.tryOrNull
+import com.skyyo.template.utils.extensions.tryOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
 

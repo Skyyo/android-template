@@ -9,11 +9,11 @@ plugins {
     id "com.google.protobuf" version "0.8.12"
 }
 android {
-    compileSdk 30
+    compileSdk 31
     defaultConfig {
         applicationId "com.skyyo.template"
         minSdk 23
-        targetSdk 30
+        targetSdk 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -30,7 +30,17 @@ android {
             buildConfigField "String", "BASE_URL", "\"https://debug.com/\""
         }
     }
-    buildFeatures.viewBinding = true
+    kotlinOptions {
+        freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+        useIR = true
+    }
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
 }
 detekt {
     config = files("$rootDir/.detekt/config.yml")
@@ -49,21 +59,36 @@ ktlint {
     }
 }
 dependencies {
-    testImplementation 'junit:junit:4.13.2'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
 
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation "androidx.fragment:fragment-ktx:1.3.5"
-    implementation 'androidx.core:core-ktx:1.6.0-rc01'
-    implementation "androidx.navigation:navigation-fragment-ktx:2.4.0-alpha03"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.core:core-ktx:1.7.0-beta02'
+    implementation "androidx.fragment:fragment-ktx:1.3.6"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.4.0-alpha10"
+
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-rc01'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.datastore:datastore-preferences:1.0.0-beta02"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    implementation "androidx.compose.animation:animation:$compose_version"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    implementation "androidx.compose.foundation:foundation-layout:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.runtime:runtime:$compose_version"
+    implementation "androidx.compose.ui:ui-util:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
+
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "com.google.protobuf:protobuf-javalite:3.10.0"
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -77,18 +102,14 @@ dependencies {
         exclude group: 'androidx.navigation'
     }
 
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation "com.github.lisawray.groupie:groupie:$groupie_version"
-    implementation "com.github.lisawray.groupie:groupie-viewbinding:$groupie_version"
+
+    implementation 'com.google.android.material:material:1.4.0'
     implementation "dev.chrisbanes.insetter:insetter:0.5.0"
-    implementation('io.coil-kt:coil:1.2.1')
 
-    //datastore
-    implementation "androidx.datastore:datastore:1.0.0-alpha08"
-    implementation "com.google.protobuf:protobuf-javalite:3.10.0"
+    debugImplementation "com.github.YarikSOffice.Venom:venom:0.4.1"
+    releaseImplementation "com.github.YarikSOffice.Venom:venom-no-op:0.4.1"
 
-    debugImplementation "com.github.YarikSOffice.Venom:venom:0.3.1"
-    releaseImplementation "com.github.YarikSOffice.Venom:venom-no-op:0.3.1"
+    testImplementation 'junit:junit:4.13.2'
 }
 // Generates the java Protobuf-lite code for the Protobufs in this project.
 protobuf {
