@@ -1,6 +1,6 @@
 package com.skyyo.template.application.network
 
-import com.skyyo.template.extensions.tryOrNull
+import com.skyyo.template.utils.extensions.tryOrNull
 import com.skyyo.template.application.models.remote.RefreshTokenRequest
 import com.skyyo.template.application.network.calls.AuthCalls
 import com.skyyo.template.application.persistance.DataStoreManager

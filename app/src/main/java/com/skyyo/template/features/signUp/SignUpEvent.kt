@@ -1,4 +1,4 @@
-package com.skyyo.template.features.auth.signUp
+package com.skyyo.template.features.signUp
 
 import androidx.annotation.StringRes
 

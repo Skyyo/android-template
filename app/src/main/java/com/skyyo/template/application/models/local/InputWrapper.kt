@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class InputModel(
-    var inputValue: String = "",
+data class InputWrapper(
+    var value: String = "",
     var errorId: Int? = null
 ) : Parcelable

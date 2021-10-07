@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/fragmentSignIn"
-        android:name="com.skyyo.template.features.auth.signIn.SignInFragment"
+        android:name="com.skyyo.template.features.signIn.SignInFragment"
         tools:layout="@layout/fragment_sign_in">
         <argument
             android:name="lightBars"
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/fragmentSignUp"
-        android:name="com.skyyo.template.features.auth.signUp.SignUpFragment"
+        android:name="com.skyyo.template.features.signUp.SignUpFragment"
         tools:layout="@layout/fragment_sign_up">
         <argument
             android:name="lightBars"

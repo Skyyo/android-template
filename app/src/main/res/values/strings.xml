@@ -1,6 +1,10 @@
 <resources>
-    <string name="app_name">AndroidTemplate</string>
+    <string name="app_name">android-template</string>
     <string name="email_is_empty">Email can\'t be empty</string>
     <string name="email_is_not_valid">Email is not valid.</string>
+    <string name="error_email_empty">email is empty</string>
+    <string name="error_email_invalid">email is invalid</string>
+    <string name="error_password_empty">password can\'t be empty</string>
+    <string name="error_password_invalid">invalid password</string>
 
 </resources>

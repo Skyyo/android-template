@@ -1,4 +1,4 @@
-package com.skyyo.template.features.auth.signUp
+package com.skyyo.template.features.signUp
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -15,7 +15,6 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
 
     val events = Channel<SignUpEvent>(Channel.UNLIMITED)
-    val state = handle.getLiveData("state", SignUpFragment.stateX)
 
     private fun goHome() = navigationDispatcher.emit { it.navigate(R.id.goHome) }
 }
