@@ -1,15 +1,19 @@
 buildscript {
-    ext.kotlin_version = '1.5.30'
-    ext.lifecycle_version = '2.3.1'
-    ext.groupie_version = '2.9.0'
-    ext.moshi_version = '1.12.0'
-    ext.retrofit_version = '2.9.0'
-    ext.hilt_version = '2.38.1'
-    ext.nav_version = '2.4.0-alpha03'
+    ext {
+        compose_version = '1.1.0-alpha05'
+        kotlin_version = '1.5.31'
+        lifecycle_version = '2.3.1'
+        moshi_version = '1.12.0'
+        retrofit_version = '2.9.0'
+        accompanist_version = "0.17.0"
+        hilt_version = '2.38.1'
+        nav_version = '2.4.0-alpha03'
+    }
 
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.2'

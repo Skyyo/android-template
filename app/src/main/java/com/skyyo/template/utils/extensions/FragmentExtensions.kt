@@ -1,4 +1,4 @@
-package com.skyyo.template.extensions
+package com.skyyo.template.utils.extensions
 
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
