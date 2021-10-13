@@ -1,6 +1,8 @@
 # android-template
 Template repo with various common components, to reduce "project setup" time
 
+Fragmentless template can be found [here](https://github.com/Skyyo/android-compose-template)
+
 1. [Single navigation graph](https://github.com/Skyyo/android-template)
 2. [Single navigation graph & Room ](https://github.com/Skyyo/android-template/tree/room)
 3. [Single navigation graph & Proto Store ](https://github.com/Skyyo/android-template/tree/proto_store)
