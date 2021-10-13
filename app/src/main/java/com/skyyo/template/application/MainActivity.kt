@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.*
+import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.skyyo.template.R
@@ -61,7 +63,17 @@ class MainActivity : AppCompatActivity() {
             navHost.navController.graph = navGraph
             navController = navHost.navController
             navController.addOnDestinationChangedListener(destinationChangedListener)
-            binding.bnv.setupWithNavController(navController)
+            binding.bnv.setOnItemSelectedListener { item ->
+                val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
+                builder.setPopUpTo(R.id.fragmentHome, inclusive = false, saveState = true)
+                val options = builder.build()
+                try {
+                    navController.navigate(item.itemId, null, options)
+                    true
+                } catch (e: IllegalArgumentException) {
+                    false
+                }
+            }
         }
     }
 
