@@ -217,6 +217,7 @@ Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.corou
 * It won't hurt to use [canary leak](https://square.github.io/leakcanary/) to check whether you don't have serious issues with memory leaks.
 * [Strict mode](https://developer.android.com/reference/android/os/StrictMode) might be helpfull to do a few optimizations.
 * If we decouple app language from the system language, please use [SplitInstallManager](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager) or disable ubundling language files using [android.bundle.language.enableSplit = false](https://stackoverflow.com/a/53276459/5704989)
+* Check if cold startup time is good. If it's not - try to use [app startup library](https://developer.android.com/topic/libraries/app-startup) in case when there is plenty of ContentProviders. Also take a look if smth can be lazy initialized if it's not used immediately upon app start. Here is a [library](https://github.com/okcredit/android-cold-startup-instrumentation) which allows to monitor the amount of ms needed for content providers to be initialized. One of the approach of measuring the startup time is nicely described [here](https://medium.com/androiddevelopers/testing-app-startup-performance-36169c27ee55) (using a bash script).
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
