@@ -1,6 +1,8 @@
 # android-template
 Template repo with various common components, to reduce "project setup" time
 
+Fragmentless template can be found [here](https://github.com/Skyyo/android-compose-template)
+
 1. [Single navigation graph](https://github.com/Skyyo/android-template)
 2. [Single navigation graph & Room ](https://github.com/Skyyo/android-template/tree/room)
 3. [Single navigation graph & Proto Store ](https://github.com/Skyyo/android-template/tree/proto_store)
@@ -171,19 +173,32 @@ For API < 26 versions - just [enable desugaring](https://developer.android.com/s
 
 * Document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
 * Take responsibility for keeping libraries updated to the latest versions available. Be very carefull, read all release notes & be prepared that there might be subtle, destructive changed.
-* Optimize multiple recyclerViews which use the same items by:
-```kotlin
-setRecycledViewPool(sharedViewPool)
-layoutManager.recycleChildrenOnDetach = true
-```
-* Set the ```recyclerView``` adapter to ```null``` in ```onDestroyView()```, in cases where free memory is preffered over single adapter initialization.
-* Use [max recycled views](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.RecycledViewPool#setMaxRecycledViews(int,%20int)) for item types that don't need the default pool of 5
 * Optimize internet traffic using HEAD requests where makes sense.
 * Ensure that you're handling system insets on all screens, so app falls under [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) category.
 * Never use ```shareIn``` or ```stateIn``` to create a new flow that’s returned when calling a function. [Explanation](https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74) 
 * Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
 * Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
-* Be very carefull with stateFlow, since it's not exact replacement for liveData. [Change proposal](https://github.com/Kotlin/kotlinx.coroutines/issues/2223), [motivation](https://bladecoder.medium.com/kotlins-flow-in-viewmodels-it-s-complicated-556b472e281a)
+* Be very careful when choosing between ```liveData``` & ```stateFlows```. 
+We still can't drop ```liveData``` not only because we need it in the ```savedStateHandle.getLiveData<Key>``` scenarios, but because ```stateFlow``` can't reproduce a certain behaviour in "search-like" scenarios:
+```kotlin
+class ViewModel(repository: Repository) : ViewModel() {
+
+    private val query = MutableStateFlow("")
+    
+    val results: Flow<Result> = query.flatMapLatest { query ->
+        repository.search(query)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = Result()
+    )
+    
+   fun onQueryChanged(query: String) { query.value = query }
+}
+```
+* Always use ```liveData``` for cases when we are performing ```observable.switchMap/flatMapLatest``` type of operations. In code above it's the ```query```, it has to be declared as ```liveData```. You can always observe it using ```.asFlow```
+Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.coroutines/issues/2223) 
+* Be carefull how you update the ```stateFlow``` value, since using ```stateFlow.value = stateFlow.value.copy()``` can create unexpected results. If between the time copy function completes and the ```stateFlows``` new value is emitted another thread tries to update the ```stateFlow``` — by using copy and updating one of the properties that the current copy isn’t modifying — we could end up with results we were not expecting. So please use [update](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/update.html) in such cases. 
 
 
 # Continuous integration & pull requests
@@ -196,13 +211,13 @@ layoutManager.recycleChildrenOnDetach = true
 
 # Before release
 * Check the app for [overdrawing](https://developer.android.com/topic/performance/rendering/overdraw) regions, and optimize wherever possible.
-* Check all ```recyclerViews``` usages and apply ```setHasFixedSize(true)``` wherever applicable.
 * Run IDE's ```remove unused resources```. Be carefull to check the changes before commiting, so you don't accidentaly remove classes, which are just temporarily unused.
 * Run IDE's ```convert png's to webp's```.
 * Check the [r8](https://developer.android.com/studio/build/shrink-code#enable) rules to prevent release .apk/.aab issues as much as possible.
 * It won't hurt to use [canary leak](https://square.github.io/leakcanary/) to check whether you don't have serious issues with memory leaks.
 * [Strict mode](https://developer.android.com/reference/android/os/StrictMode) might be helpfull to do a few optimizations.
 * If we decouple app language from the system language, please use [SplitInstallManager](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager) or disable ubundling language files using [android.bundle.language.enableSplit = false](https://stackoverflow.com/a/53276459/5704989)
+* Check if cold startup time is good. If it's not - try to use [app startup library](https://developer.android.com/topic/libraries/app-startup) in case when there is plenty of ContentProviders. Also take a look if smth can be lazy initialized if it's not used immediately upon app start. Here is a [library](https://github.com/okcredit/android-cold-startup-instrumentation) which allows to monitor the amount of ms needed for content providers to be initialized. One of the approach of measuring the startup time is nicely described [here](https://medium.com/androiddevelopers/testing-app-startup-performance-36169c27ee55) (using a bash script).
 
 # Additonal advices
 * Invest some time into getting used to [IDE shortcuts](https://developer.android.com/studio/intro/keyboard-shortcuts). Doing so will save you a lot of time.
