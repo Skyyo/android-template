@@ -4,7 +4,10 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
         // change fragmentHost background color, hide bottomNavigationView etc.
     }
+    private var readyToDismissSplash = false
 
     @Inject
     lateinit var navigationDispatcher: NavigationDispatcher
@@ -41,31 +45,48 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+        observeSplashScreenVisibility()
         lockIntoPortrait()
-        setTheme(R.style.ThemeDay)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyEdgeToEdge()
-        initNavigation()
-        lifecycleScope.launchWhenResumed { observeUnauthorizedEvent() }
-        lifecycleScope.launchWhenResumed { observeNavigationCommands() }
+        lifecycleScope.apply {
+            launch(Dispatchers.Default) {
+                val startDestination = provideStartDestination()
+                withContext(Dispatchers.Main) { initNavigation(startDestination) }
+                readyToDismissSplash = true
+            }
+            launchWhenResumed { observeUnauthorizedEvent() }
+            launchWhenResumed { observeNavigationCommands() }
+        }
     }
 
-    private fun initNavigation() {
+    private fun observeSplashScreenVisibility() {
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                return if (readyToDismissSplash) {
+                    // The content is ready; start drawing.
+                    content.viewTreeObserver.removeOnPreDrawListener(this)
+                    true
+                } else {
+                    // The content is not ready; suspend.
+                    false
+                }
+            }
+        })
+    }
+
+    private fun initNavigation(startDestination: Int) {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
             val navInflater = navHost.navController.navInflater
-            val navGraph = navInflater.inflate(R.navigation.main_graph).apply {
-                setStartDestination(provideStartDestination())
-            }
+            val navGraph = navInflater.inflate(R.navigation.main_graph)
+            navGraph.setStartDestination(startDestination)
             navHost.navController.graph = navGraph
             navController = navHost.navController
             navController.addOnDestinationChangedListener(destinationChangedListener)
         }
-    }
-
-    private fun provideStartDestination(): Int {
-        val accessToken = runBlocking { dataStoreManager.getAccessToken() }
-        return if (accessToken == null) R.id.fragmentSignIn else R.id.fragmentHome
     }
 
     private fun lockIntoPortrait() {
@@ -74,6 +95,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun applyEdgeToEdge() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+    }
+
+    private suspend fun provideStartDestination(): Int {
+        val accessToken = dataStoreManager.getAccessToken()
+        return if (accessToken == null) R.id.fragmentSignIn else R.id.fragmentHome
     }
 
     private suspend fun observeUnauthorizedEvent() {
