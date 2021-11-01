@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ThemeSplash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@drawable/splash_drawable</item>
+    <style name="ThemeSplash" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">@android:color/holo_green_dark</item>
+<!--                <item name="windowSplashScreenIconBackgroundColor">@android:color/holo_orange_light</item>-->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_drawable</item>
+        <item name="postSplashScreenTheme">@style/ThemeDay</item>
     </style>
 
-    <style name="ThemeDay" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="ThemeDay" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@null</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

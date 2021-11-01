@@ -2,7 +2,7 @@ package com.skyyo.template.application
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-//import com.github.venom.Venom
+// import com.github.venom.Venom
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
