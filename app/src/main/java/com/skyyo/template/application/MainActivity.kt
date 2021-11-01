@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
 import com.skyyo.template.databinding.ActivityMainBinding
@@ -84,10 +83,7 @@ class MainActivity : AppCompatActivity() {
     private fun initNavigation(startDestination: Int) {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
             val navInflater = navHost.navController.navInflater
-            val navGraph = navInflater.inflate(R.navigation.navigation_graph).apply {
-                setStartDestination(provideStartDestination())
-            }
-            val navGraph = navInflater.inflate(R.navigation.main_graph)
+            val navGraph = navInflater.inflate(R.navigation.navigation_graph)
             navGraph.setStartDestination(startDestination)
             navHost.navController.graph = navGraph
             navController = navHost.navController

@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/fragmentHome"
-        android:icon="@drawable/venom_dead_robot"
+        android:icon="@android:drawable/ic_delete"
         android:title="first" />
     <item
         android:id="@+id/secondTabFragment"
-        android:icon="@drawable/venom_death_bg"
+        android:icon="@android:drawable/ic_delete"
         android:title="second" />
     <item
         android:id="@+id/thirdTabFragment"
