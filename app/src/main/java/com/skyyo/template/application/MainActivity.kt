@@ -52,10 +52,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         applyEdgeToEdge()
         lifecycleScope.apply {
-            launch(Dispatchers.Default) {
-                val startDestination = provideStartDestination()
-                withContext(Dispatchers.Main) { initNavigation(startDestination) }
-                readyToDismissSplash = true
+            launch {
+                withContext(Dispatchers.IO) {
+                    val startDestination = provideStartDestination()
+                    withContext(Dispatchers.Main) {
+                        initNavigation(startDestination)
+                        readyToDismissSplash = true
+                    }
+                }
             }
             launchWhenResumed { observeUnauthorizedEvent() }
             launchWhenResumed { observeNavigationCommands() }
