@@ -1,3 +1,4 @@
+name: Run Lint, Ktlint, Detekt on Tag
 on:
   push:
     tags: '*'
