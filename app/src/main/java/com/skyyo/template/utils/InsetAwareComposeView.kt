@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 
 /**
- * to help with https://github.com/chrisbanes/accompanist/issues/155.
+ * to help with https://github.com/google/accompanist/issues/155.
  *
  * At the moment Compose will layout on the first [onMeasure] call. Now for fragments, they usually
  * will not receive [WindowInsets] (via [dispatchApplyWindowInsets] until the
