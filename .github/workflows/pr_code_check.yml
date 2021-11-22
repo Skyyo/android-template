@@ -1,4 +1,4 @@
-name: Run code checks upon PR on master
+name: PR code check
 on:
   pull_request:
     branches: [ master ]
