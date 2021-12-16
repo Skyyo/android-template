@@ -1,4 +1,4 @@
-name: Run Lint, Ktlint, Detekt upon PR on master
+name: PR code check
 on:
   pull_request:
     branches: [ master ]
