@@ -21,7 +21,6 @@ import com.skyyo.template.utils.InsetAwareComposeView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
@@ -43,11 +42,9 @@ class SignInFragment : Fragment() {
             }
 
             LaunchedEffect(Unit) {
-                launch {
-                    events.collect { event ->
-                        when (event) {
-                            is SignInEvent.ShowLongToast -> {
-                            }
+                events.collect { event ->
+                    when (event) {
+                        is SignInEvent.ShowLongToast -> {
                         }
                     }
                 }

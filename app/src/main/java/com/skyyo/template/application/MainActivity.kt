@@ -59,10 +59,10 @@ class MainActivity : AppCompatActivity() {
                         initNavigation(startDestination)
                         readyToDismissSplash = true
                     }
+                    launchWhenResumed { observeNavigationCommands() }
                 }
             }
             launchWhenResumed { observeUnauthorizedEvent() }
-            launchWhenResumed { observeNavigationCommands() }
         }
     }
 
