@@ -230,6 +230,7 @@ Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.corou
 * Attemp to use min/max data models: shrinked *User* model returned from DB for list of users, and complete *User* model for details screen.
 * The ```android:allowBackup=true``` tag can lead to a broken app state that can cause constant app crashes. Benefits of using this feature are almost non-existing, so we keep it off by default. [Explanation](https://www.reddit.com/r/androiddev/comments/ov18d2/this_is_why_your_subclassed_application_isnt/)
 * Remember that to keep everyone (including yourself) happy, we can always just increase the database schema during developtement, and rely on [fallbackToDestructiveMigration](https://developer.android.com/reference/android/arch/persistence/room/RoomDatabase.Builder#fallbacktodestructivemigration) when using Room. This will prevent people from getting crashes of they don't clear app data, and us from writing migrations during develpment process. Just ensure that you revert the version to 1 for the release.
+* Leave code in a better shape than it was before even you've changed few lines in a file.
 
 # License
 ```
