@@ -89,15 +89,17 @@ class ShopProductItem(
     private val onClick: OnClick
 )
 ```
-
-* We are extensively using ```tryOrNull```extension when we don't need to check the exception reasons from ```try/catch``` blocks, which allows us to write concise statements like in example below, by using kotlins nullability with [elvis operator](https://kotlinlang.org/docs/reference/null-safety.html#elvis-operator)
+Always attempt to use [references](https://kotlinlang.org/docs/reflection.html#function-references) instead of lambdas.
 ```kotlin
-suspend fun checkIfEmailExists(email: String): EmailExistsResult {
-        val result = tryOrNull { authCalls.checkIfEmailExists(email) }
-        result ?: return EmailExistsNetworkError
-        return if (result.isUserRegisteredByEmail) EmailExists else EmailNotFound
-    }
+QuestionContent(
+         question = question,
+         onIdAnswerGiven = viewModel::onIdAnswerGiven,
+          ..
+         )
 ```
+* Unless constant is used across different classes, declare it as `const val NAME = VALUE` on top of the calling class.
+
+* Be pragmatic when writing `composables`. As a rule of a thumb - just allow passing `Modifier` to the composable,  unless it's very specific and is a part of a single not reusable composable, eg. if you have an `AppBar` on a certain screen which is very different from `AppBar` that is used in 99% of the app - it makes no sense to pass other arguments to the latter, just to use single composable everywhere.
 
 * Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate). We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```. For testing purposes please use [venom](https://github.com/YarikSOffice/venom).
 ```kotlin
