@@ -204,7 +204,7 @@ Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.corou
 
 # Compose related
 * Always use [remember](https://developer.android.com/jetpack/compose/state#state-in-composables) for anything that can allocate memory, is taking time to get calculated or you don't want to recreate it when recomposition happens.
-* Be pragmatic with creating composables. If some element is specific to the screen, it's not necessary to provide the modifier & other params into it. If composable is going to be used in different places - then providing modifier to it makes sense.
+* Be pragmatic with creating composables. If some element is specific to the screen, it's not necessary to provide constructor with parameters to it. If composable is going to be used in different places - then providing modifier and other params makes sense.
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
