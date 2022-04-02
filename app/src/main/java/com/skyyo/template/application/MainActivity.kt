@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -32,10 +31,6 @@ class MainActivity : AppCompatActivity() {
     private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
         binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
         // change fragmentHost background color, hide bottomNavigationView etc.
-        window.insetsController?.setSystemBarsAppearance(
-            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-        )
     }
     private var readyToDismissSplash = false
 
