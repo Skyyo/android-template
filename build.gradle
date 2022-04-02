@@ -1,12 +1,12 @@
 buildscript {
     ext {
-        compose_version = '1.1.0-rc01'
-        kotlin_version = '1.6.0'
-        lifecycle_version = '2.4.0'
+        kotlin_version = '1.6.10'
+        compose_version = '1.2.0-alpha06'
+        lifecycle_version = '2.4.1'
         moshi_version = '1.13.0'
         retrofit_version = '2.9.0'
         accompanist_version = "0.20.3"
-        hilt_version = '2.38.1'
+        hilt_version = '2.40.5'
         nav_version = '2.4.0-rc01'
         room_version = '2.4.0'
     }
@@ -17,7 +17,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }

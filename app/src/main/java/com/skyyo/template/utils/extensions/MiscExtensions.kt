@@ -1,14 +1,14 @@
 package com.skyyo.template.utils.extensions
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 inline fun <T> tryOrNull(f: () -> T) =
     try {
@@ -42,3 +42,19 @@ fun <T> SavedStateHandle.getStateFlow(
 
     return stateFlow
 }
+
+const val SUBSCRIPTION_TIMEOUT = 5000L
+
+fun <T> Flow<T>.asStateFlow(
+    scope: CoroutineScope,
+    initialValue: T,
+    context: CoroutineContext = Dispatchers.Default,
+    started: SharingStarted = SharingStarted.WhileSubscribed(SUBSCRIPTION_TIMEOUT),
+): StateFlow<T> = flowOn(context).stateIn(scope, started, initialValue)
+
+fun <T> LiveData<T>.asStateFlow(
+    scope: CoroutineScope,
+    initialValue: T,
+    context: CoroutineContext = Dispatchers.Default,
+    started: SharingStarted = SharingStarted.WhileSubscribed(SUBSCRIPTION_TIMEOUT),
+): StateFlow<T> = asFlow().flowOn(context).stateIn(scope, started, initialValue)
