@@ -89,15 +89,17 @@ class ShopProductItem(
     private val onClick: OnClick
 )
 ```
-
-* We are extensively using ```tryOrNull```extension when we don't need to check the exception reasons from ```try/catch``` blocks, which allows us to write concise statements like in example below, by using kotlins nullability with [elvis operator](https://kotlinlang.org/docs/reference/null-safety.html#elvis-operator)
+Always attempt to use [references](https://kotlinlang.org/docs/reflection.html#function-references) instead of lambdas.
 ```kotlin
-suspend fun checkIfEmailExists(email: String): EmailExistsResult {
-        val result = tryOrNull { authCalls.checkIfEmailExists(email) }
-        result ?: return EmailExistsNetworkError
-        return if (result.isUserRegisteredByEmail) EmailExists else EmailNotFound
-    }
+QuestionContent(
+         question = question,
+         onIdAnswerGiven = viewModel::onIdAnswerGiven,
+          ..
+         )
 ```
+* Unless constant is used across different classes, declare it as `const val NAME = VALUE` on top of the calling class.
+
+* Be pragmatic when writing `composables`. As a rule of a thumb - just allow passing `Modifier` to the composable,  unless it's very specific and is a part of a single not reusable composable, eg. if you have an `AppBar` on a certain screen which is very different from `AppBar` that is used in 99% of the app - it makes no sense to pass other arguments to the latter, just to use single composable everywhere.
 
 * Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate). We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```. For testing purposes please use [venom](https://github.com/YarikSOffice/venom).
 ```kotlin
@@ -200,6 +202,9 @@ class ViewModel(repository: Repository) : ViewModel() {
 Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.coroutines/issues/2223) 
 * Be carefull how you update the ```stateFlow``` value, since using ```stateFlow.value = stateFlow.value.copy()``` can create unexpected results. If between the time copy function completes and the ```stateFlows``` new value is emitted another thread tries to update the ```stateFlow``` — by using copy and updating one of the properties that the current copy isn’t modifying — we could end up with results we were not expecting. So please use [update](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/update.html) in such cases. 
 
+# Compose related
+* Always use [remember](https://developer.android.com/jetpack/compose/state#state-in-composables) for anything that can allocate memory, is taking time to get calculated or you don't want to recreate it when recomposition happens.
+* Be pragmatic with creating composables. If some element is specific to the screen, it's not necessary to provide constructor with parameters to it. If composable is going to be used in different places - then providing modifier and other params makes sense.
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
