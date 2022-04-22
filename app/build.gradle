@@ -65,7 +65,7 @@ ktlint {
 }
 dependencies {
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.core:core-ktx:1.9.0-alpha02'
@@ -91,7 +91,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
 
-    implementation("io.coil-kt:coil-compose:1.4.0")
+    implementation("io.coil-kt:coil-compose:2.0.0-rc03")
 
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
