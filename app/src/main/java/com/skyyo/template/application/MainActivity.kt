@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var dataStoreManager: DataStoreManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         installSplashScreen()
+        super.onCreate(savedInstanceState)
         observeSplashScreenVisibility()
         lockIntoPortrait()
         binding = ActivityMainBinding.inflate(layoutInflater)
