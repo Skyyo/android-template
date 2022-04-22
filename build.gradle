@@ -7,7 +7,7 @@ buildscript {
         retrofit_version = '2.9.0'
         accompanist_version = "0.20.3"
         hilt_version = '2.41'
-        room_version = '2.4.0'
+        room_version = '2.4.2'
     }
 
     repositories {
