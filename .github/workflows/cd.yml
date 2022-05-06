@@ -1,0 +1,263 @@
+name: CD
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 6 * * MON'
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.GIT_ADMIN_TOKEN }}"
+          
+      - name: Check if there are changes for deployment
+        id: deploy_verification
+        run:  |
+          # Gets last commit SHA from MASTER
+          LATEST_MASTER_COMMIT_SHA=$(curl -H 'Authorization: token ${{ github.token }}' https://api.github.com/repos/Israel-IT/cannabotech-android/commits/master | jq -r '.parents[0].sha')
+          
+          # Gets last created TAG name
+          LATEST_TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))
+          
+          # Gets SHA of latest TAG commit
+          LATEST_TAG_COMMIT_SHA=$(git rev-list -n 1 $LATEST_TAG_NAME)
+          
+          # Compare last master commit SHA with last tag commit SHA
+          if [[ "$LATEST_MASTER_COMMIT_SHA" == "$LATEST_TAG_COMMIT_SHA" ]]  ;
+              then
+          echo "Deployment is not required"
+          echo ::set-output name=IS_DEPLOY_REQUIRED::0
+              else
+          echo "Deployment required" 
+          echo ::set-output name=IS_DEPLOY_REQUIRED::1
+              fi
+              
+      - name: Set up JDK 11
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          
+      - name: Increment app version code & name
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        run: |
+          LINE_CODE=$(cat gradle.properties | grep verCode)
+          VAL_CODE=$(echo $LINE_CODE | cut -f 2 -d "=")
+          VAL_CODE=$(($VAL_CODE + 1))
+          NEW_LINE_CODE=$(echo verCode=$VAL_CODE)
+          sed -e "s,$LINE_CODE,$NEW_LINE_CODE,g" -i gradle.properties
+          
+          echo "NEW_VERSION_CODE=$VAL_CODE" >> $GITHUB_ENV
+          
+          LINE_NAME=$(cat gradle.properties | grep verName)
+          VAL_NAME=$(echo $LINE_NAME | cut -f 2 -d "=")
+          VAL_NAME=$(echo ${VAL_NAME} | awk -F. -v OFS=. '{$NF++;print}') 
+          NEW_LINE_NAME=$(echo verName=$VAL_NAME)
+          sed -e "s,$LINE_NAME,$NEW_LINE_NAME,g" -i gradle.properties
+          
+      - name: Decrypt keystore
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        run: |
+          echo "${{ secrets.KEYSTORE }}" > keystore.asc
+          TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
+          mkdir "${TMP_KEYSTORE_FILE_PATH}"
+          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch keystore.asc > "${TMP_KEYSTORE_FILE_PATH}"/keystore.jks
+      
+      - name: build signed .aab
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        run: ./gradlew app:bundleRelease
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          
+      - name: Upload .aab artifact
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        uses: actions/upload-artifact@v1
+        with:
+          name: android-template
+          path: app/build/outputs/bundle/release/app-release.aab
+            
+      - name: Deploy to Google Play Internal Track 
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        run: |
+          AAB_PATH=app/build/outputs/bundle/release/app-release.aab
+          BUILD_NO='${{ env.NEW_VERSION_CODE }}'
+          PLAYSTORE_TRACK=internal
+          DRAFT=false
+          PACKAGE_NAME='${{ secrets.APP_PACKAGE_NAME }}'
+          PLAYSTORE_KEY='${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}'
+          AUTH_TOKEN=$(echo $PLAYSTORE_KEY | jq -r '.private_key')
+          AUTH_ISS=$(echo $PLAYSTORE_KEY | jq -r '.client_email')
+          AUTH_AUD=$(echo $PLAYSTORE_KEY | jq -r '.token_uri')
+          
+          if [ -z "$AUTH_TOKEN" ] || [ -z "$AUTH_ISS" ] || [ -z "$AUTH_AUD" ]; then
+            echo "PLAYSTORE_SERVICE_KEY not as expected. Exiting."
+            exit 1
+          fi
+          
+          if [ $DRAFT == true ]; 
+            then
+              STATUS="draft"
+            else
+              STATUS="completed"
+          fi
+          # Get access token
+          echo "Getting access token..."
+          JWT_HEADER=$(echo -n '{"alg":"RS256","typ":"JWT"}' | openssl base64 -e)
+          jwt_claims()
+          {
+            cat <<EOF
+          {
+            "iss": "$AUTH_ISS",
+            "scope": "https://www.googleapis.com/auth/androidpublisher",
+            "aud": "$AUTH_AUD",
+            "exp": $(($(date +%s)+300)),
+            "iat": $(date +%s)
+          }
+          EOF
+          }
+          JWT_CLAIMS=$(echo -n "$(jwt_claims)" | openssl base64 -e)
+          JWT_PART_1=$(echo -n "$JWT_HEADER.$JWT_CLAIMS" | tr -d '\n' | tr -d '=' | tr '/+' '_-')
+          JWT_SIGNING=$(echo -n "$JWT_PART_1" | openssl dgst -binary -sha256 -sign <(printf '%s\n' "$AUTH_TOKEN") | openssl base64 -e)
+          JWT_PART_2=$(echo -n "$JWT_SIGNING" | tr -d '\n' | tr -d '=' | tr '/+' '_-')
+          HTTP_RESPONSE_TOKEN=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" \
+              --header "Content-type: application/x-www-form-urlencoded" \
+              --request POST \
+              --data "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=$JWT_PART_1.$JWT_PART_2" \
+            "$AUTH_AUD")
+          HTTP_BODY_TOKEN=$(echo $HTTP_RESPONSE_TOKEN | sed -e 's/HTTPSTATUS\:.*//g')
+          HTTP_STATUS_TOKEN=$(echo $HTTP_RESPONSE_TOKEN | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          if [ $HTTP_STATUS_TOKEN != 200 ]; then
+            echo -e "Create access token failed"
+            echo "Status: $HTTP_STATUS_TOKEN"
+            echo "Body: $HTTP_BODY_TOKEN"
+            echo "Exiting"
+            exit 1
+          fi
+          ACCESS_TOKEN=$(echo $HTTP_BODY_TOKEN | jq -r '.access_token')
+          # Create new edit
+          echo "Creating new edit..."
+          EXPIRY=$(($(date +%s)+120))
+          post_data_create_edit()
+          {
+            cat <<EOF
+          {
+            "id": "GitHubAction-$BUILD_NO",
+            "expiryTimeSeconds": "$EXPIRY"
+          }
+          EOF
+          }
+          HTTP_RESPONSE_CREATE_EDIT=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" \
+              --header "Authorization: Bearer $ACCESS_TOKEN" \
+              --header "Content-Type: application/json" \
+              --request POST \
+              --data "$(post_data_create_edit)" \
+            https://www.googleapis.com/androidpublisher/v3/applications/$PACKAGE_NAME/edits)
+          HTTP_BODY_CREATE_EDIT=$(echo $HTTP_RESPONSE_CREATE_EDIT | sed -e 's/HTTPSTATUS\:.*//g')
+          HTTP_STATUS_CREATE_EDIT=$(echo $HTTP_RESPONSE_CREATE_EDIT | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          if [ $HTTP_STATUS_CREATE_EDIT != 200 ]; then
+            echo -e "Create edit failed"
+            echo "Status: $HTTP_STATUS_CREATE_EDIT"
+            echo "Body: $HTTP_BODY_CREATE_EDIT"
+            echo "Exiting"
+            exit 1
+          fi
+          EDIT_ID=$(echo $HTTP_BODY_CREATE_EDIT | jq -r '.id')
+          # Upload aab
+          echo "Uploading aab..."
+          HTTP_RESPONSE_UPLOAD_AAB=$(curl --write-out "HTTPSTATUS:%{http_code}" \
+              --header "Authorization: Bearer $ACCESS_TOKEN" \
+              --header "Content-Type: application/octet-stream" \
+              --progress-bar \
+              --request POST \
+              --upload-file $AAB_PATH \
+            https://www.googleapis.com/upload/androidpublisher/v3/applications/$PACKAGE_NAME/edits/$EDIT_ID/bundles?uploadType=media)
+          HTTP_BODY_UPLOAD_AAB=$(echo $HTTP_RESPONSE_UPLOAD_AAB | sed -e 's/HTTPSTATUS\:.*//g')
+          HTTP_STATUS_UPLOAD_AAB=$(echo $HTTP_RESPONSE_UPLOAD_AAB | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          if [ $HTTP_STATUS_UPLOAD_AAB != 200 ]; then
+            echo -e "Upload aab failed"
+            echo "Status: $HTTP_STATUS_UPLOAD_AAB"
+            echo "Body: $HTTP_BODY_UPLOAD_AAB"
+            echo "Exiting"
+            exit 1
+          fi
+          # Assign edit to track
+          echo "Assigning edit to track..."
+          post_data_assign_track()
+          {
+            cat <<EOF
+          {
+            "track": "$PLAYSTORE_TRACK",
+            "releases": [
+              {
+                "versionCodes": [
+                  $NEW_VERSION_CODE
+                ],
+                "status": "$STATUS"
+              }
+            ]
+          }
+          EOF
+          }
+          HTTP_RESPONSE_ASSIGN_TRACK=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" \
+              --header "Authorization: Bearer $ACCESS_TOKEN" \
+              --header "Content-Type: application/json" \
+              --request PUT \
+              --data "$(post_data_assign_track)" \
+            https://www.googleapis.com/androidpublisher/v3/applications/$PACKAGE_NAME/edits/$EDIT_ID/tracks/$PLAYSTORE_TRACK)
+          HTTP_BODY_ASSIGN_TRACK=$(echo $HTTP_RESPONSE_ASSIGN_TRACK | sed -e 's/HTTPSTATUS\:.*//g')
+          HTTP_STATUS_ASSIGN_TRACK=$(echo $HTTP_RESPONSE_ASSIGN_TRACK | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+                    
+           if [ $HTTP_STATUS_ASSIGN_TRACK != 200 ]; then
+             echo -e "Assign track failed"
+             echo "Status: $HTTP_STATUS_ASSIGN_TRACK"
+             echo "Body: $HTTP_BODY_ASSIGN_TRACK"
+             echo "Exiting"
+             exit 1
+           fi
+          # Commit edit
+          echo "Committing edit..."
+         
+          HTTP_RESPONSE_COMMIT=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" \
+              --header "Authorization: Bearer $ACCESS_TOKEN" \
+              --request POST \
+            https://www.googleapis.com/androidpublisher/v3/applications/$PACKAGE_NAME/edits/$EDIT_ID:commit)
+          HTTP_BODY_COMMIT=$(echo $HTTP_RESPONSE_COMMIT | sed -e 's/HTTPSTATUS\:.*//g')
+          HTTP_STATUS_COMMIT=$(echo $HTTP_RESPONSE_COMMIT | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          if [ $HTTP_STATUS_COMMIT != 200 ]; then
+            echo -e "Commit edit failed"
+            echo "Status: $HTTP_STATUS_COMMIT"
+            echo "Body: $HTTP_BODY_COMMIT"
+            echo "Exiting"
+            exit 1
+          fi
+          echo "Deployment succeeded"
+          
+      - name: Commit and push changes
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        run: |
+          sh -c "git config --global user.name '${GITHUB_ACTOR}' \
+          && git config --global user.email '${GITHUB_ACTOR}@users.noreply.github.com' \
+          && git add gradle.properties && git commit -m 'increment version code' --allow-empty \
+          && git push -u origin HEAD"
+          
+      - name: Create GitHub Tag
+        if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{ env.NEW_VERSION_CODE }}",
+              sha: context.sha
+            })
