@@ -30,6 +30,7 @@ class SignInViewModel @Inject constructor(
     val email = handle.getStateFlow(viewModelScope, "email", InputWrapper())
     val password = handle.getStateFlow(viewModelScope, "password", InputWrapper())
     val isPasswordVisible = handle.getStateFlow(viewModelScope, "isPasswordVisible", false)
+    var stateRelatedVariable = false
 
     val areInputsValid = combine(email, password) { email, password ->
         email.errorId == null && email.value.isNotEmpty() && password.errorId == null && password.value.isNotEmpty()
@@ -38,6 +39,7 @@ class SignInViewModel @Inject constructor(
     val events = Channel<SignInEvent>(Channel.UNLIMITED)
 
     fun onEmailEntered(input: String) {
+        stateRelatedVariable = true
         val error = InputValidator.getEmailErrorIdOrNull(input)
         email.value = email.value.copy(value = input, errorId = error)
     }

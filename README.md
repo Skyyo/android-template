@@ -170,6 +170,28 @@ val itemDecorator = ItemDecorator(
 )
 ```
 
+## Unit testing
+
+* Always preffer fakes over mocks whenever possible. It has a noticable effect on time test needs to run.
+* Be as descriptive as possible when naming the test
+* Also don't use `Update email when onEmailEntered() is invoked() = runTest {`, always use braces so that function name is always visible when function bodies are folded
+```kotlin
+    @Test
+    fun `Update email when onEmailEntered() is invoked`() {
+       runTest {
+        // given
+        viewModel.email.value = InputWrapper(value = "example.email@")
+        // when
+        viewModel.onEmailEntered("example.email@g")
+        // then
+        viewModel.email.test {
+            Assert.assertEquals(InputWrapper(value = "example.email@g"), awaitItem())
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+ }
+```
+
 * Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro). We should rely on [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). All examples are inside this [sheet](https://docs.google.com/spreadsheets/d/1rSUBATCkLolTeX4VORi14t_Ue3yz5WdJHng1WgM75Qs/edit#gid=0). Template already contains basic usages inside ```DateTimeExtensions.kt```
 
