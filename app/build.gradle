@@ -22,9 +22,24 @@ android {
             }
         }
     }
+    signingConfigs {
+        release {
+            def homePath = System.getProperty("user.home")
+            def tmpFilePath = homePath + "/work/_temp/keystore/"
+            def allFilesFromDir = new File(tmpFilePath).listFiles()
+            if (allFilesFromDir != null) {
+                def keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo("keystore/keystore.jks")
+            }
+            storeFile = file(homePath + "/work/_temp/keystore/keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -117,5 +132,8 @@ dependencies {
     debugImplementation "com.github.YarikSOffice.Venom:venom:0.5.0"
     releaseImplementation "com.github.YarikSOffice.Venom:venom-no-op:0.5.0"
 
+    testImplementation "io.mockk:mockk:1.12.3"
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
+    testImplementation 'app.cash.turbine:turbine:0.7.0'
     testImplementation 'junit:junit:4.13.2'
 }
