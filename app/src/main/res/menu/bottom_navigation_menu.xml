@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragmentHome"
+        android:icon="@android:drawable/ic_delete"
+        android:title="first" />
+    <item
+        android:id="@+id/secondTabFragment"
+        android:icon="@android:drawable/ic_delete"
+        android:title="second" />
+    <item
+        android:id="@+id/thirdTabFragment"
+        android:icon="@drawable/abc_vector_test"
+        android:title="third" />
+</menu>

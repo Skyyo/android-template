@@ -8,6 +8,9 @@
     <fragment
         android:id="@+id/fragmentHome"
         android:name="com.skyyo.template.features.home.HomeFragment">
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="true" />
         <action
             android:id="@+id/goSignIn"
             app:destination="@+id/fragmentSignIn" />
@@ -19,7 +22,9 @@
         <argument
             android:name="lightBars"
             android:defaultValue="false" />
-
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="false" />
         <action
             android:id="@+id/goHome"
             app:destination="@+id/fragmentHome"
@@ -33,5 +38,25 @@
         <argument
             android:name="lightBars"
             android:defaultValue="false" />
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="false" />
     </fragment>
+
+    <fragment
+        android:id="@+id/secondTabFragment"
+        android:name="com.skyyo.template.features.secondTab.SecondTabFragment">
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/thirdTabFragment"
+        android:name="com.skyyo.template.features.thirdTab.ThirdTabFragment">
+        <argument
+            android:name="bottomNavigationVisible"
+            android:defaultValue="true" />
+    </fragment>
+
 </navigation>

@@ -9,8 +9,10 @@ import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.skyyo.template.R
 import com.skyyo.template.application.persistance.DataStoreManager
@@ -29,8 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val destinationChangedListener = onDestinationChanged { _, _, arguments ->
-        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: true)
-        // change fragmentHost background color, hide bottomNavigationView etc.
+        binding.fragmentHost.changeSystemBars(arguments?.getBoolean("lightBars") ?: false)
+        binding.bnv.isVisible = arguments?.getBoolean("bottomNavigationVisible") ?: false
     }
     private var readyToDismissSplash = false
 
@@ -85,11 +87,22 @@ class MainActivity : AppCompatActivity() {
     private fun initNavigation(startDestination: Int) {
         (supportFragmentManager.findFragmentById(R.id.fragmentHost) as NavHostFragment).also { navHost ->
             val navInflater = navHost.navController.navInflater
-            val navGraph = navInflater.inflate(R.navigation.main_graph)
+            val navGraph = navInflater.inflate(R.navigation.navigation_graph)
             navGraph.setStartDestination(startDestination)
             navHost.navController.graph = navGraph
             navController = navHost.navController
             navController.addOnDestinationChangedListener(destinationChangedListener)
+            binding.bnv.setOnItemSelectedListener { item ->
+                val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
+                builder.setPopUpTo(R.id.fragmentHome, inclusive = false, saveState = true)
+                val options = builder.build()
+                try {
+                    navController.navigate(item.itemId, null, options)
+                    true
+                } catch (e: IllegalArgumentException) {
+                    false
+                }
+            }
         }
     }
 
@@ -120,5 +133,9 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun observeNavigationCommands() {
         for (command in navigationDispatcher.navigationEmitter) command.invoke(navController)
+    }
+
+    fun returnToTopOfRootStack() {
+        binding.bnv.selectedItemId = R.id.fragmentHome
     }
 }
