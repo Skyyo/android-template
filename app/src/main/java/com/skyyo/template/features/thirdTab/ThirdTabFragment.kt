@@ -12,11 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.skyyo.template.theme.TemplateTheme
 import com.skyyo.template.utils.extensions.interceptBackPress
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -52,8 +50,6 @@ class ThirdTabFragment : Fragment() {
             }
 
             TemplateTheme {
-                ProvideWindowInsets {
-                }
             }
         }
     }
