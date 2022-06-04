@@ -6,7 +6,6 @@ import com.skyyo.template.application.repositories.auth.AuthRepository
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -30,12 +29,12 @@ class SignInViewModelTest {
     @Test
     fun `set stateRelatedVariable to true when onEmailEntered() is invoked`() {
 //        runTest {
-            // given
-            viewModel.stateRelatedVariable = false
-            // when
-            viewModel.onEmailEntered("1")
-            // then
-            assertEquals(true, viewModel.stateRelatedVariable)
+        // given
+        viewModel.stateRelatedVariable = false
+        // when
+        viewModel.onEmailEntered("1")
+        // then
+        assertEquals(true, viewModel.stateRelatedVariable)
 //        }
     }
 }
