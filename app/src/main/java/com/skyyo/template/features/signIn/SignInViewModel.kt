@@ -10,7 +10,6 @@ import com.skyyo.template.application.repositories.auth.AuthRepository
 import com.skyyo.template.application.repositories.auth.SocialSignInResult
 import com.skyyo.template.utils.InputValidator
 import com.skyyo.template.utils.eventDispatchers.NavigationDispatcher
-import com.skyyo.template.utils.extensions.getStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -20,16 +19,20 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val EMAIL = "email"
+const val PASSWORD = "password"
+const val IS_PASSWORD_VISIBLE = "isPasswordVisible"
+
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val navigationDispatcher: NavigationDispatcher,
-    handle: SavedStateHandle,
+    private val handle: SavedStateHandle,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    val email = handle.getStateFlow(viewModelScope, "email", InputWrapper())
-    val password = handle.getStateFlow(viewModelScope, "password", InputWrapper())
-    val isPasswordVisible = handle.getStateFlow(viewModelScope, "isPasswordVisible", false)
+    val email = handle.getStateFlow(EMAIL, InputWrapper())
+    val password = handle.getStateFlow(PASSWORD, InputWrapper())
+    val isPasswordVisible = handle.getStateFlow(IS_PASSWORD_VISIBLE, false)
     var stateRelatedVariable = false
 
     val areInputsValid = combine(email, password) { email, password ->
@@ -41,16 +44,16 @@ class SignInViewModel @Inject constructor(
     fun onEmailEntered(input: String) {
         stateRelatedVariable = true
         val error = InputValidator.getEmailErrorIdOrNull(input)
-        email.value = email.value.copy(value = input, errorId = error)
+        handle[EMAIL] = email.value.copy(value = input, errorId = error)
     }
 
     fun onPasswordEntered(input: String) {
         val error = InputValidator.getPasswordErrorIdOrNull(input)
-        password.value = password.value.copy(value = input, errorId = error)
+        handle[PASSWORD] = password.value.copy(value = input, errorId = error)
     }
 
     fun onPasswordVisibilityClick() {
-        isPasswordVisible.value = !isPasswordVisible.value
+        handle[IS_PASSWORD_VISIBLE] = !isPasswordVisible.value
     }
 
     fun goHome() = navigationDispatcher.emit { it.navigate(R.id.goHome) }
