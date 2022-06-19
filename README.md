@@ -72,7 +72,22 @@ data class SignUpRequest(
     val firstName: String,
 )
 ```
+* Inside viewModel, refer to the following placement of functions & variables
+```kotlin
+class ViewModel(..){
+ // variables
+ 
+ // init{}
+ 
+ // ui callbacks, eg. onBackPressed(), onNextButtonClick(), onEmailEntered()
+ 
+ // db/network related functions
 
+ // helper functions, transformations etc.
+ 
+ // navigation functions
+}
+```
 * Use [typealiases](https://kotlinlang.org/docs/reference/type-aliases.html#type-aliases) if type name is too long or we have a lot of recurring lambda types.
 ```typealias``` should be declared in an appropriate scope. If used in a single place - it can be placed on top of the same class. If it's a common lambda, which can be reused across different feature packages - please create ```CommonTypeAliases``` file under common package.
 
@@ -101,7 +116,7 @@ QuestionContent(
 
 * Be pragmatic when writing `composables`. As a rule of a thumb - just allow passing `Modifier` to the composable,  unless it's very specific and is a part of a single not reusable composable, eg. if you have an `AppBar` on a certain screen which is very different from `AppBar` that is used in 99% of the app - it makes no sense to pass other arguments to the latter, just to use single composable everywhere.
 
-* Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate). We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```. For testing purposes please use [venom](https://github.com/YarikSOffice/venom).
+* Handle [process death](https://developer.android.com/topic/libraries/architecture/saving-states#onsaveinstancestate), at minimum in places with user input and other critical to lose temporary state. We are using [SavedStateHandle](https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate) inside viewModel 99% of the time. There is difference between return types. We need to manually save the values when using ```non-liveData``` fields. ```LiveData``` value reassignments will be automatically reflected inside ```savedStateHandle```. For testing purposes please use [venom](https://github.com/YarikSOffice/venom).
 ```kotlin
 val state = handle.getLiveData("viewState", 0)
 state.postValue(1) // doing so will automatically give us value of 1 upon PD
@@ -114,6 +129,7 @@ var scanCompleted = handle.get<Boolean>("scanCompleted") ?: false
 scanCompleted = true // will be "false" after PD, unless we set the key/value pair to the bundle like above
 
 ```
+Also remember about ```rememberSaveable```. Sometimes it's preffered to persist view state inside view itself. eg. when we want to remember last active Tab, and don't do anything with it on the viewModel layer. 
 
 * Declare custom classes instead of [Pairs](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/#pair), [Tripples](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-triple/).
 
@@ -227,6 +243,13 @@ Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.corou
 # Compose related
 * Always use [remember](https://developer.android.com/jetpack/compose/state#state-in-composables) for anything that can allocate memory, is taking time to get calculated or you don't want to recreate it when recomposition happens.
 * Be pragmatic with creating composables. If some element is specific to the screen, it's not necessary to provide constructor with parameters to it. If composable is going to be used in different places - then providing modifier and other params makes sense.
+* When observing events and the ```when``` becomes big enough, please use the following:
+```kotlin
+LaunchedEffect(Unit) { 
+    observeEvents(events) 
+}
+```
+* Remember to use [Immutable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Immutable) annotation wherever possible
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
