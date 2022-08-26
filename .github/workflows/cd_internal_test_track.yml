@@ -1,4 +1,4 @@
-name: CD
+name: CD Internal Test Track
 on:
   workflow_dispatch:
   schedule:
@@ -72,7 +72,7 @@ jobs:
       
       - name: build signed .aab
         if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
-        run: ./gradlew app:bundleRelease
+        run: ./gradlew app:bundleInternal
         env:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -83,12 +83,12 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: android-template
-          path: app/build/outputs/bundle/release/app-release.aab
+          path: app/build/outputs/bundle/internal/app-internal.aab
             
       - name: Deploy to Google Play Internal Track 
         if: steps.deploy_verification.outputs.IS_DEPLOY_REQUIRED == 1
         run: |
-          AAB_PATH=app/build/outputs/bundle/release/app-release.aab
+          AAB_PATH=app/build/outputs/bundle/internal/app-internal.aab
           BUILD_NO='${{ env.NEW_VERSION_CODE }}'
           PLAYSTORE_TRACK=internal
           DRAFT=false

@@ -8,10 +8,10 @@ import retrofit2.http.POST
 interface AuthCalls {
 
     @POST("/api/Account/sign-up")
-    suspend fun signUp(@Body body: SignUpRequest): Response<Void>
+    suspend fun signUp(@Body body: SignUpRequest): Response<Unit>
 
     @POST("/api/Account/sign-in")
-    suspend fun signIn(@Body body: SignInRequest): SignInResponse
+    suspend fun signIn(@Body body: SignInRequest): Response<SignInResponse>
 
     @POST("/api/Account/sign-in/google")
     suspend fun authGoogle(@Body body: SocialSignInRequest): SignInResponse

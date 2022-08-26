@@ -1,5 +1,6 @@
 package com.skyyo.template.application.repositories.auth
 
+import com.skyyo.template.application.CODE_200
 import com.skyyo.template.application.models.remote.SignInRequest
 import com.skyyo.template.application.models.remote.SignUpRequest
 import com.skyyo.template.application.models.remote.SocialSignInRequest
@@ -15,17 +16,27 @@ class AuthRepository @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ) {
 
-    suspend fun signIn(request: SignInRequest): Boolean {
+    suspend fun signIn(request: SignInRequest): SignInResult {
         val response = tryOrNull { authCalls.signIn(request) }
-        // TODO do conversions/store tokens etc.
-        response ?: return false
-        return true
+        return when {
+            response?.code() == CODE_200 -> {
+                // TODO do conversions/store tokens etc.
+                when {
+                    response.body()!!.firstLogin -> SignInResult.SuccessFirstTime
+                    else -> SignInResult.Success
+                }
+            }
+            else -> SignInResult.NetworkError
+        }
     }
 
-    suspend fun signUp(signUpRequest: SignUpRequest): Boolean {
+    suspend fun signUp(signUpRequest: SignUpRequest): SignUpResult {
         val response = tryOrNull { authCalls.signUp(signUpRequest) }
         // TODO do conversions/store tokens etc.
-        return response != null
+        return when {
+            response?.code() == CODE_200 -> SignUpResult.Success
+            else -> SignUpResult.NetworkError
+        }
     }
 
     suspend fun authGoogle(request: SocialSignInRequest): SocialSignInResult {
