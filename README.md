@@ -212,14 +212,13 @@ val itemDecorator = ItemDecorator(
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro). We should rely on [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). All examples are inside this [sheet](https://docs.google.com/spreadsheets/d/1rSUBATCkLolTeX4VORi14t_Ue3yz5WdJHng1WgM75Qs/edit#gid=0). Template already contains basic usages inside ```DateTimeExtensions.kt```
 
 * Document complex code blocks, custom views, values that represent "types" in network responses, logical flows, etc.
-* Take responsibility for keeping libraries updated to the latest versions available. Be very carefull, read all release notes & be prepared that there might be subtle, destructive changed.
+* Take responsibility for keeping libraries updated to the latest versions available. Be very carefull, read all release notes & be prepared that there might be subtle, destructive changes.
 * Optimize internet traffic using HEAD requests where makes sense.
 * Ensure that you're handling system insets on all screens, so app falls under [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) category.
 * Never use ```shareIn``` or ```stateIn``` to create a new flow that’s returned when calling a function. [Explanation](https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74) 
 * Use [shrinkResources](https://developer.android.com/studio/build/shrink-code)
 * Use [firebase dynamic links](https://firebase.google.com/docs/dynamic-links) for deep links
-* Be very careful when choosing between ```liveData``` & ```stateFlows```. 
-We still can't drop ```liveData``` not only because we need it in the ```savedStateHandle.getLiveData<Key>``` scenarios, but because ```stateFlow``` can't reproduce a certain behaviour in "search-like" scenarios:
+* Be very careful when choosing between ```liveData``` & ```stateFlows``` because ```stateFlow``` can't reproduce a certain behaviour in "search-like" scenarios:
 ```kotlin
 class ViewModel(repository: Repository) : ViewModel() {
 
