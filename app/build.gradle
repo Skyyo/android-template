@@ -81,19 +81,20 @@ ktlint {
 }
 dependencies {
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
-    implementation "androidx.appcompat:appcompat:1.6.0-beta01"
-    implementation 'androidx.core:core-ktx:1.9.0-beta01'
-    implementation "androidx.fragment:fragment-ktx:1.5.2"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.appcompat:appcompat:1.6.0-rc01"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation "androidx.fragment:fragment-ktx:1.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.2"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha02"
 
 
     implementation "androidx.compose.animation:animation:$compose_version"
@@ -108,7 +109,7 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
 
-    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.2.0")
 
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation 'androidx.core:core-splashscreen:1.0.0'
