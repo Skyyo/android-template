@@ -240,7 +240,7 @@ Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.corou
 * Be carefull how you update the ```stateFlow``` value, since using ```stateFlow.value = stateFlow.value.copy()``` can create unexpected results. If between the time copy function completes and the ```stateFlows``` new value is emitted another thread tries to update the ```stateFlow``` — by using copy and updating one of the properties that the current copy isn’t modifying — we could end up with results we were not expecting. So please use [update](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/update.html) in such cases. 
 
 # Compose related
-* Always use [remember](https://developer.android.com/jetpack/compose/state#state-in-composables) for anything that can allocate memory, is taking time to get calculated or you don't want to recreate it when recomposition happens.
+* Always use [remember](https://developer.android.com/jetpack/compose/state#state-in-composables) for anything that can allocate memory but can be created only once, is taking time to get calculated and unstable lambdas.
 * Be pragmatic with creating composables. If some element is specific to the screen, it's not necessary to provide constructor with parameters to it. If composable is going to be used in different places - then providing modifier and other params makes sense.
 * When observing events and the ```when``` becomes big enough, please use the following:
 ```kotlin
@@ -248,7 +248,6 @@ LaunchedEffect(Unit) {
     observeEvents(events) 
 }
 ```
-* Remember to use [Immutable](https://developer.android.com/reference/kotlin/androidx/compose/runtime/Immutable) annotation wherever possible
 
 # Continuous integration & pull requests
 * Template already has a few GitHub Actions workflows included. Please ensure you're passing the checks locally, before opening pull request. To do that, either run commands in the IDE terminal, or setup a github hook. Commands are: ```./gradlew ktlintFormat```, ```./gradlew detektDebug```. <b>Request a review only after the CI checks have passed successfully</b>.
