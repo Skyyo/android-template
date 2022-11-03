@@ -186,28 +186,6 @@ val itemDecorator = ItemDecorator(
 )
 ```
 
-## Unit testing
-
-* Always preffer fakes over mocks whenever possible. It has a noticable effect on time test needs to run.
-* Be as descriptive as possible when naming the test
-* Also don't use `Update email when onEmailEntered() is invoked() = runTest {`, always use braces so that function name is always visible when function bodies are folded
-```kotlin
-    @Test
-    fun `Update email when onEmailEntered() is invoked`() {
-       runTest {
-        // given
-        viewModel.email.value = InputWrapper(value = "example.email@")
-        // when
-        viewModel.onEmailEntered("example.email@g")
-        // then
-        viewModel.email.test {
-            Assert.assertEquals(InputWrapper(value = "example.email@g"), awaitItem())
-            cancelAndConsumeRemainingEvents()
-        }
-    }
- }
-```
-
 * Working with dates/times is done via [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html#package.description). No need for [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) or ```java.util.date``` anymore.
 For API < 26 versions - just [enable desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). Also don't be fast with creating extensions, first make yourself familiar with already available methods. There are plenty examples out there, like [this one](https://www.baeldung.com/java-8-date-time-intro). We should rely on [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). All examples are inside this [sheet](https://docs.google.com/spreadsheets/d/1rSUBATCkLolTeX4VORi14t_Ue3yz5WdJHng1WgM75Qs/edit#gid=0). Template already contains basic usages inside ```DateTimeExtensions.kt```
 
@@ -240,10 +218,9 @@ Behaviour difference is explained [here](https://github.com/Kotlin/kotlinx.corou
 * Be carefull how you update the ```stateFlow``` value, since using ```stateFlow.value = stateFlow.value.copy()``` can create unexpected results. If between the time copy function completes and the ```stateFlows``` new value is emitted another thread tries to update the ```stateFlow``` — by using copy and updating one of the properties that the current copy isn’t modifying — we could end up with results we were not expecting. So please use [update](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/update.html) in such cases. 
 
 # Compose related
-* I'd recommend reading [this](https://skyyo.medium.com/performance-in-jetpack-compose-9a85ce02f8f9) article about performance related things in Compose
+* I'd recommend reading [this](https://skyyo.medium.com/performance-in-jetpack-compose-9a85ce02f8f9) article about performance related things in Compose.
 * Always use [remember](https://developer.android.com/jetpack/compose/state#state-in-composables) for anything that can allocate memory but can be created only once, is taking time to get calculated and unstable lambdas.
-* Use [collectAsStateWithLifecycleImmutable](https://gist.github.com/Skyyo/378fe96e610557026be4f5f7c2df133b) as a workaround when passing Collections & 3d party lirbary objects which are not inferred stable by compose compiler to ensure that Composables which take List for exampe won't recompose for no reason. Alternative would be [kotlinx.collections.immutable](https://github.com/Kotlin/kotlinx.collections.immutable) but seems perfromance wise it's a bigger evil than a wrapper, also this [issue](https://issuetracker.google.com/issues/254435410) is making it even worse
-
+* Use [collectAsStateWithLifecycleImmutable](https://gist.github.com/Skyyo/378fe96e610557026be4f5f7c2df133b) as a workaround when passing Collections & 3d party lirbary objects which are not inferred stable by compose compiler to ensure that Composables which take List for exampe won't recompose for no reason. Alternative would be [kotlinx.collections.immutable](https://github.com/Kotlin/kotlinx.collections.immutable) but seems perfromance wise it's a bigger evil than a wrapper, also this [issue](https://issuetracker.google.com/issues/254435410) is making it even worse.
 * Be pragmatic with creating composables. If some element is specific to the screen, it's not necessary to provide constructor with parameters to it. If composable is going to be used in different places - then providing modifier and other params makes sense.
 * When observing events and the ```when``` becomes big enough, please use the following:
 ```kotlin
@@ -259,6 +236,27 @@ LaunchedEffect(Unit) {
 * Features should be splitted into logical chunks if they require a lot of code changes.
 * Attempt to keep PR size in range of 250 - 300 lines of code changed.
 
+# Unit testing
+
+* Always preffer fakes over mocks whenever possible. It has a noticable effect on time test needs to run.
+* Be as descriptive as possible when naming the test
+* Also don't use `Update email when onEmailEntered() is invoked() = runTest {`, always use braces so that function name is always visible when function bodies are folded
+```kotlin
+    @Test
+    fun `Update email when onEmailEntered() is invoked`() {
+       runTest {
+        // given
+        viewModel.email.value = InputWrapper(value = "example.email@")
+        // when
+        viewModel.onEmailEntered("example.email@g")
+        // then
+        viewModel.email.test {
+            Assert.assertEquals(InputWrapper(value = "example.email@g"), awaitItem())
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+ }
+```
 
 # Before release
 * Check the app for [overdrawing](https://developer.android.com/topic/performance/rendering/overdraw) regions, and optimize wherever possible.
