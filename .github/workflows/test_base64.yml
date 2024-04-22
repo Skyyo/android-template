@@ -14,20 +14,7 @@ jobs:
           java-version: 17
 
       - name: Decode keystore from base64 string to .jks file
-        run: |
-          echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
-          # Print the current directory and list its contents for debugging
-          pwd
-          ls -la
-
-      - name: Move keystore.jks to the root directory
-        run: |
-          if [ -f "keystore.jks" ]; then
-            mv keystore.jks $GITHUB_WORKSPACE/keystore.jks
-          else
-            echo "Error: keystore.jks file not found."
-            exit 1
-          fi
+        run: echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
           
       # - name: Convert keystore from base64 string to .jks file
       #   run: |
