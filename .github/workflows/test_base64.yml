@@ -12,9 +12,19 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+
       - name: Decode keystore from base64 string to .jks file
         run: |
           echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
+          # Remove any existing keystore.jks file to avoid conflicts
+          rm -f keystore.jks
+          # Move keystore.jks to the root directory
+          mv keystore.jks $GITHUB_WORKSPACE/keystore.jks
+          
+      # - name: Convert keystore from base64 string to .jks file
+      #   run: |
+      #     echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
+      
       - name: build signed .apk
         run: ./gradlew assembleRelease --stacktrace
         env:
