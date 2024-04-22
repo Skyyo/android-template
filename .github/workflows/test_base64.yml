@@ -14,16 +14,23 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Decode Keystore
-        env:
-          ENCODED_STRING: ${{ secrets.KEYSTORE }}
+      - name: Decrypt keystore
         run: |
-          echo $ENCODED_STRING > keystore-b64.txt
-          base64 -d keystore-b64.txt > keystore.jks
-
-      - name: build signed .apk
-        run: ./gradlew assembleRelease --stacktrace
-        env:
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          echo "${{ secrets.KEYSTORE }}" > keystore.jks
+          TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
+          mkdir "${TMP_KEYSTORE_FILE_PATH}"
+          base64 --decode > "${TMP_KEYSTORE_FILE_PATH}"/keystore.jks
+          # - name: Decrypt keystore
+          #   run: |
+          #     echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
+          - name: build signed .apk
+            run: ./gradlew assembleRelease --stacktrace
+            env:
+              KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+              KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+              KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+#      - name: Upload .aab artifact
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: apk
+#          path: loops/build/outputs/apk/release/loops-release.apk
