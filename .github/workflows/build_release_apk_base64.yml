@@ -1,4 +1,4 @@
-name: (Test) Build release .apk from b64
+name: Build release .apk from base64 encoded .jks
 on:
   workflow_dispatch:
 jobs:
@@ -20,12 +20,6 @@ jobs:
           TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}/keystore"
           mkdir -p "${TMP_KEYSTORE_FILE_PATH}"  # Create the directory if it doesn't exist
           echo "${{ secrets.KEYSTORE }}" | base64 --decode > "${TMP_KEYSTORE_FILE_PATH}/keystore.jks"
-
-#      - name: Upload keystore artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: keystore
-#          path: ${{ runner.temp }}/keystore/keystore.jks
 
       - name: build signed .apk
         run: ./gradlew assembleRelease --stacktrace
