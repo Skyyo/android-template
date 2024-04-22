@@ -7,22 +7,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Set up JDK 17
         uses: actions/setup-java@v1
         with:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Decode keystore from base64 string to .jks file
-        run: echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
-          
-      # - name: Convert keystore from base64 string to .jks file
-      #   run: |
-      #     echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
-      - name: Debugging
+      - name: Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.KEYSTORE }}
         run: |
-          pwd
-          ls -la
+          echo $ENCODED_STRING > keystore-b64.txt
+          base64 -d keystore-b64.txt > keystore.jks
+
       - name: build signed .apk
         run: ./gradlew assembleRelease --stacktrace
         env:
