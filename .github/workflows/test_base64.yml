@@ -19,7 +19,10 @@ jobs:
       # - name: Convert keystore from base64 string to .jks file
       #   run: |
       #     echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
-      
+      - name: Debugging
+        run: |
+          pwd
+          ls -la
       - name: build signed .apk
         run: ./gradlew assembleRelease --stacktrace
         env:
