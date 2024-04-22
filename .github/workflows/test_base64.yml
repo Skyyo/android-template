@@ -14,8 +14,7 @@ jobs:
           java-version: 17
       - name: Decode keystore from base64 string to .jks file
         run: |
-          echo "${{ secrets.KEYSTORE }}" > keystore.txt
-          base64 -d keystore.txt > keystore.jks
+          echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
       - name: build signed .apk
         run: ./gradlew assembleRelease --stacktrace
         env:
