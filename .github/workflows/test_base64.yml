@@ -21,20 +21,20 @@ jobs:
           mkdir -p "${TMP_KEYSTORE_FILE_PATH}"  # Create the directory if it doesn't exist
           echo "${{ secrets.KEYSTORE }}" | base64 --decode > "${TMP_KEYSTORE_FILE_PATH}/keystore.jks"
 
-      - name: Upload keystore artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: keystore
-          path: ${{ runner.temp }}/keystore/keystore.jks
-
-#      - name: build signed .apk
-#        run: ./gradlew assembleRelease --stacktrace
-#        env:
-#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-#          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-#      - name: Upload .aab artifact
-#        uses: actions/upload-artifact@v1
+#      - name: Upload keystore artifact
+#        uses: actions/upload-artifact@v2
 #        with:
-#          name: apk
-#          path: loops/build/outputs/apk/release/loops-release.apk
+#          name: keystore
+#          path: ${{ runner.temp }}/keystore/keystore.jks
+
+      - name: build signed .apk
+        run: ./gradlew assembleRelease --stacktrace
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      - name: Upload .aab artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: apk
+          path: loops/build/outputs/apk/release/loops-release.apk
