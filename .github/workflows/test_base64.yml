@@ -14,9 +14,6 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2.0.10
-
       - name: Decrypt keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > keystore.jks
@@ -24,12 +21,18 @@ jobs:
           mkdir "${TMP_KEYSTORE_FILE_PATH}"
           base64 --decode > "${TMP_KEYSTORE_FILE_PATH}"/keystore.jks
 
-      - name: build signed .apk
-        run: ./gradlew assembleRelease --stacktrace
-        env:
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      - name: Upload keystore artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: keystore
+          path: ${{ runner.temp }}/keystore/keystore.jks
+
+#      - name: build signed .apk
+#        run: ./gradlew assembleRelease --stacktrace
+#        env:
+#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 #      - name: Upload .aab artifact
 #        uses: actions/upload-artifact@v1
 #        with:
