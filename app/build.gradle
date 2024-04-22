@@ -18,19 +18,25 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
-        release {
-            def homePath = System.getProperty("user.home")
-            def tmpFilePath = homePath + "/work/_temp/keystore/"
-            def allFilesFromDir = new File(tmpFilePath).listFiles()
-            if (allFilesFromDir != null) {
-                def keystoreFile = allFilesFromDir.first()
-                keystoreFile.renameTo("keystore/keystore.jks")
-            }
-            storeFile = file(homePath + "/work/_temp/keystore/keystore.jks")
+        release{
+            storeFile file("../keystore.jks")
             storePassword System.getenv("KEYSTORE_PASSWORD")
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")
         }
+//        release {
+//            def homePath = System.getProperty("user.home")
+//            def tmpFilePath = homePath + "/work/_temp/keystore/"
+//            def allFilesFromDir = new File(tmpFilePath).listFiles()
+//            if (allFilesFromDir != null) {
+//                def keystoreFile = allFilesFromDir.first()
+//                keystoreFile.renameTo("keystore/keystore.jks")
+//            }
+//            storeFile = file(homePath + "/work/_temp/keystore/keystore.jks")
+//            storePassword System.getenv("KEYSTORE_PASSWORD")
+//            keyAlias System.getenv("KEY_ALIAS")
+//            keyPassword System.getenv("KEY_PASSWORD")
+//        }
     }
     buildTypes {
         release {
